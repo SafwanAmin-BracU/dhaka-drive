@@ -26,7 +26,9 @@ export const GET: RequestHandler = ({ url }) => {
 
 
 export const POST: RequestHandler = async ({ request }) => {
-    const { min = 0, max = 1 } = await request.json();
+    const formData = await request.formData();
+    const min = Number(formData.get('min') ?? '0');
+    const max = Number(formData.get('max') ?? '1');
     const d = max - min;
 
     if (isNaN(d) || d < 0) {
