@@ -2,62 +2,105 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-    console.log("🌱 Seeding database...");
 
-    const SAFWAN_ID = "23101281";
-    const OTHER_USER_1 = "10001";
-    const OTHER_USER_2 = "10002";
+    await prisma.serviceProvider.deleteMany();
 
-    // Clear previous data
-    await prisma.parkingSpot.deleteMany();
-
-    const parkingSpots = [
-        // -------- Safwan's Spots --------
+    const sampleProviders = [
         {
-            ownerId: SAFWAN_ID,
-            address: "Bashundhara R/A, Block C, Dhaka",
-            location: "23.8151, 90.4285",
-            additionalInfo: "Near NSU gate 6, shaded parking"
+            name: "Dhaka Towing Pro",
+            type: "Towing",
+            phone: "01711-000000",
+            location: "Gulshan",
         },
         {
-            ownerId: SAFWAN_ID,
-            address: "Uttara Sector 7, Dhaka",
-            location: "23.8740, 90.4003",
-            additionalInfo: "Basement parking, 24/7 access"
-        },
-
-        // -------- Other User 1 --------
-        {
-            ownerId: OTHER_USER_1,
-            address: "Dhanmondi 27, Dhaka",
-            location: "23.7465, 90.3760",
-            additionalInfo: "Street-side parking available"
+            name: "Rahim's Mechanics",
+            type: "Mechanic",
+            phone: "01822-111111",
+            location: "Mirpur 10",
         },
         {
-            ownerId: OTHER_USER_1,
-            address: "Lalmatia Block D, Dhaka",
-            location: "23.7517, 90.3655",
-            additionalInfo: "Private garage parking"
-        },
-
-        // -------- Other User 2 --------
-        {
-            ownerId: OTHER_USER_2,
-            address: "Banani DOHS, Dhaka",
-            location: "23.7987, 90.4066",
-            additionalInfo: "Reserved slot under CCTV"
+            name: "BD Highway Police",
+            type: "Hotline",
+            phone: "999",
+            location: "National",
         },
         {
-            ownerId: OTHER_USER_2,
-            address: "Mirpur 10, Dhaka",
-            location: "23.8041, 90.3654",
-            additionalInfo: "Open parking, day time only"
-        }
+            name: "City Ambulance",
+            type: "Medical",
+            phone: "106",
+            location: "Dhanmondi",
+        },
+        {
+            name: "Quick Fix Tyre",
+            type: "Mechanic",
+            phone: "01933-222222",
+            location: "Banani",
+        },
+        // --- 10 NEW ROWS ADDED BELOW ---
+        {
+            name: "Uttara Emergency Fuel",
+            type: "Fuel Delivery",
+            phone: "01544-333333",
+            location: "Uttara",
+        },
+        {
+            name: "Shyamoli Car Wash & Detailing",
+            type: "Car Service",
+            phone: "01655-444444",
+            location: "Shyamoli",
+        },
+        {
+            name: "Fast Battery Replacement",
+            type: "Battery Service",
+            phone: "01766-555555",
+            location: "Tejgaon",
+        },
+        {
+            name: "Motijheel Traffic Assistance",
+            type: "Traffic Help",
+            phone: "01877-666666",
+            location: "Motijheel",
+        },
+        {
+            name: "New Market Locksmith",
+            type: "Locksmith",
+            phone: "01988-777777",
+            location: "New Market",
+        },
+        {
+            name: "Khilgaon Glass Repair",
+            type: "Auto Glass",
+            phone: "01799-888888",
+            location: "Khilgaon",
+        },
+        {
+            name: "National Fire Service",
+            type: "Emergency",
+            phone: "999",
+            location: "National",
+        },
+        {
+            name: "Bashundhara Diagnostics",
+            type: "Medical",
+            phone: "01511-999999",
+            location: "Bashundhara R/A",
+        },
+        {
+            name: "EPZ Roadside Assistance",
+            type: "Towing",
+            phone: "01622-000000",
+            location: "EPZ Area",
+        },
+        {
+            name: "Savar CNG Refill",
+            type: "Fuel Service",
+            phone: "01833-111111",
+            location: "Savar",
+        },
     ];
-
     // Insert data
-    for (const spot of parkingSpots) {
-        await prisma.parkingSpot.create({ data: spot });
+    for (const provider of sampleProviders) {
+        await prisma.serviceProvider.create({ data: provider });
     }
 
     console.log("🌱 Database seeded successfully!");
