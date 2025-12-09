@@ -59,3 +59,11 @@ model ParkingSpot {
   lastUpdated    DateTime @default(now()) @updatedAt
   createdAt      DateTime @default(now())
 }
+
+model ServiceProvider {
+  id       String  @id @default(cuid())
+  name     String
+  type     String
+  phone    String?
+  location String?
+}
