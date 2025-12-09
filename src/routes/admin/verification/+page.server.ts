@@ -1,93 +1,61 @@
-// src/routes/admin/verification/+page.server.ts
 import { fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
-import { prisma } from '$lib/server/prisma'; // Assuming you have a prisma client instance
+import { prisma } from '$lib/prisma'; // Adjust path to your prisma client instance
 
-// --- Load Function: Fetch Unverified Incidents ---
 export const load: PageServerLoad = async () => {
   try {
-    // Fetch incidents with 'Active' status for verification
-    const reports = await prisma.incident.findMany({
+    // Fetch all incidents that currently have the default 'Active' status
+    // We are treating 'Active' as the "Waiting for Verification" queue
+    const unverifiedIncidents = await prisma.incident.findMany({
       where: {
-        status: 'Active',
+        status: 'Active'
       },
       orderBy: {
-        createdAt: 'asc',
-      },
+        createdAt: 'desc'
+      }
     });
 
     return {
-      reports: reports.map(report => ({
-        id: report.id,
-        title: report.title,
-        description: report.description,
-        type: report.type,
-        location: report.location,
-        reportedBy: report.reportedBy ?? 'Anonymous',
-        createdAt: report.createdAt.toISOString(),
-      })),
+      incidents: unverifiedIncidents
     };
   } catch (error) {
-    console.error('Error fetching reports:', error);
-    // Return an empty array or handle error gracefully
-    return {
-      reports: [],
-      error: 'Failed to load reports.',
-    };
+    console.error('Failed to load incidents:', error);
+    return { incidents: [] };
   }
 };
 
-// --- Server Actions: Handle Verification ---
 export const actions: Actions = {
-  // Action to approve a report
   approve: async ({ request }) => {
-    const data = await request.formData();
-    const id = data.get('id');
+    const formData = await request.formData();
+    const id = formData.get('id') as string;
 
-    if (typeof id !== 'string') {
-      return fail(400, { error: 'Invalid report ID provided.' });
-    }
+    if (!id) return fail(400, { message: 'Incident ID is required' });
 
     try {
       await prisma.incident.update({
         where: { id },
-        data: {
-          status: 'Verified', // Update status to Verified
-        },
+        data: { status: 'Verified' }
       });
-      // Optionally, update the TrafficSummary table based on the approved report
-      // (This is a complex business logic step, omitted for simplicity)
-      
-      return { success: true, action: 'approved', id };
+      return { success: true };
     } catch (error) {
-      console.error('Error approving report:', error);
-      return fail(500, { error: 'Could not approve report.' });
+      return fail(500, { message: 'Failed to approve incident' });
     }
   },
 
-  // Action to reject a report
   reject: async ({ request }) => {
-    const data = await request.formData();
-    const id = data.get('id');
-    const reason = data.get('reason'); // Admin might provide a rejection reason
+    const formData = await request.formData();
+    const id = formData.get('id') as string;
 
-    if (typeof id !== 'string') {
-      return fail(400, { error: 'Invalid report ID provided.' });
-    }
+    if (!id) return fail(400, { message: 'Incident ID is required' });
 
     try {
       await prisma.incident.update({
         where: { id },
-        data: {
-          status: 'Rejected', // Update status to Rejected
-          // You might add another field to store the rejection reason
-        },
+        data: { status: 'Rejected' }
       });
-
-      return { success: true, action: 'rejected', id };
+      return { success: true };
     } catch (error) {
-      console.error('Error rejecting report:', error);
-      return fail(500, { error: 'Could not reject report.' });
+      return fail(500, { message: 'Failed to reject incident' });
     }
-  },
+  }
 };

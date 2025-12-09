@@ -1,126 +1,247 @@
 <script lang="ts">
-  import { superForm } from 'sveltekit-superforms/client';
-  import { applyAction, deserialize } from '$app/forms';
-  import { page } from '$app/stores';
-  import type { PageData } from './$types';
+	import { enhance } from "$app/forms";
+	import type { PageData } from "./$types";
 
-  export let data: PageData;
-  
-  // Use a state rune to manage the list of reports locally
-  let reports = $state(data.reports);
+	// Svelte 5: Get data using $props rune
+	let { data }: { data: PageData } = $props();
 
-  // Use an effect to update the local state when the data prop changes (e.g., after successful action)
-  $effect(() => {
-    reports = data.reports;
-  });
-
-  /**
-   * Helper function to handle form submission and UI updates without full page reload.
-   */
-  async function handleSubmit(event: SubmitEvent, action: 'approve' | 'reject', reportId: string) {
-    event.preventDefault();
-
-    // 1. Manually construct FormData
-    const formData = new FormData();
-    formData.append('id', reportId);
-
-    // 2. Submit the form action
-    const response = await fetch(
-      // URL for the action endpoint: ?/approve or ?/reject
-      event.currentTarget.action + `?/${action}`,
-      {
-        method: 'POST',
-        body: formData,
-      }
-    );
-
-    // 3. Apply the form action result
-    const result = deserialize(await response.text());
-    applyAction(result);
-
-    // 4. Update the local state to remove the processed report
-    if (result.type === 'success') {
-      reports = reports.filter(r => r.id !== reportId);
-    }
-  }
-
+	// Helper to format dates cleanly
+	const formatDate = (date: Date) => {
+		return new Intl.DateTimeFormat("en-US", {
+			month: "short",
+			day: "numeric",
+			hour: "2-digit",
+			minute: "2-digit",
+		}).format(new Date(date));
+	};
 </script>
 
-<div class="container mx-auto p-4">
-  <h1 class="text-3xl font-bold mb-6">🚦 User Report Verification</h1>
-  <p class="mb-4 text-sm text-gray-500">
-    Admins can review user-submitted **Incident** reports before they are publicly displayed or used in traffic summaries.
-  </p>
+<div class="container">
+	<header class="header">
+		<h1>Report Verification Queue</h1>
+		<p class="subtitle">
+			Review and manage user-submitted traffic incidents.
+		</p>
+	</header>
 
-  {#if reports.length === 0}
-    <p class="text-center py-8 text-lg text-green-600">
-      ✅ All reports are currently verified! Check back later.
-    </p>
-  {:else}
-    <h2 class="text-xl font-semibold mb-4">Pending Reports ({reports.length})</h2>
-    
-    <div class="space-y-6">
-      {#each reports as report (report.id)}
-        <div class="card p-5 border rounded-lg shadow-md bg-white">
-          <header class="flex justify-between items-start mb-3">
-            <h3 class="text-xl font-bold text-gray-800">{report.title}</h3>
-            <span class="text-sm text-gray-500">
-              Reported: {new Date(report.createdAt).toLocaleString()}
-            </span>
-          </header>
-          
-          <div class="text-sm space-y-2 mb-4 border-l-4 border-indigo-500 pl-3 py-1">
-            <p><strong>Type:</strong> <span class="badge bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full text-xs font-medium">{report.type}</span></p>
-            <p><strong>Location:</strong> {report.location}</p>
-            <p><strong>Reporter:</strong> {report.reportedBy}</p>
-          </div>
+	{#if data.incidents.length === 0}
+		<div class="empty-state">
+			<p>🎉 All caught up! No active reports to review.</p>
+		</div>
+	{:else}
+		<div class="grid">
+			{#each data.incidents as incident (incident.id)}
+				<div class="card">
+					<div class="card-header">
+						<span class="badge {incident.type.toLowerCase()}"
+							>{incident.type}</span
+						>
+						<span class="timestamp"
+							>{formatDate(incident.createdAt)}</span
+						>
+					</div>
 
-          <p class="text-gray-600 mb-5 italic">"{report.description}"</p>
+					<div class="card-body">
+						<h2>{incident.title}</h2>
+						<p class="location">📍 {incident.location}</p>
+						<p class="description">{incident.description}</p>
 
-          <form 
-            method="POST" 
-            class="flex space-x-3" 
-            use:enhance
-            on:submit={(e) => handleSubmit(e, 'approve', report.id)}
-          >
-            <button 
-              type="submit" 
-              formaction="?/approve" 
-              class="flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded transition duration-150"
-            >
-              ✅ Approve
-            </button>
-          </form>
+						{#if incident.photoUrl}
+							<div class="image-preview">
+								<img
+									src={incident.photoUrl}
+									alt="Incident evidence"
+								/>
+							</div>
+						{/if}
 
-          <form 
-            method="POST" 
-            class="mt-2" 
-            use:enhance
-            on:submit={(e) => handleSubmit(e, 'reject', report.id)}
-          >
-            <button 
-              type="submit" 
-              formaction="?/reject" 
-              class="flex-1 w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded transition duration-150"
-            >
-              ❌ Reject
-            </button>
-          </form>
-        </div>
-      {/each}
-    </div>
-  {/if}
+						{#if incident.reportedBy}
+							<p class="reporter">
+								<small>Reported by: {incident.reportedBy}</small
+								>
+							</p>
+						{/if}
+					</div>
 
-  {#if $page.form?.error}
-    <div class="mt-4 p-3 bg-red-100 text-red-700 border border-red-400 rounded">
-      🚨 Action Error: {$page.form.error}
-    </div>
-  {/if}
+					<div class="card-actions">
+						<form
+							method="POST"
+							use:enhance
+							class="action-form"
+						>
+							<input
+								type="hidden"
+								name="id"
+								value={incident.id}
+							/>
+
+							<button
+								class="btn reject"
+								formaction="?/reject"
+								aria-label="Reject report"
+							>
+								Reject
+							</button>
+
+							<button
+								class="btn approve"
+								formaction="?/approve"
+								aria-label="Approve report"
+							>
+								Approve
+							</button>
+						</form>
+					</div>
+				</div>
+			{/each}
+		</div>
+	{/if}
 </div>
 
 <style>
-  /* You would typically use a framework like Tailwind CSS for these styles */
-  .container {
-    max-width: 900px;
-  }
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 2rem;
+		font-family:
+			system-ui,
+			-apple-system,
+			sans-serif;
+	}
+
+	.header {
+		margin-bottom: 2rem;
+	}
+
+	.subtitle {
+		color: #666;
+		margin-top: 0.5rem;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.card {
+		border: 1px solid #e2e8f0;
+		border-radius: 12px;
+		background: white;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	.card-header {
+		padding: 1rem;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		background: #f8fafc;
+		border-bottom: 1px solid #e2e8f0;
+	}
+
+	.badge {
+		background: #e2e8f0;
+		padding: 0.25rem 0.75rem;
+		border-radius: 999px;
+		font-size: 0.75rem;
+		font-weight: 600;
+		text-transform: uppercase;
+	}
+
+	/* Example dynamic badge color */
+	.badge.accident {
+		background: #fee2e2;
+		color: #991b1b;
+	}
+	.badge.traffic {
+		background: #fef3c7;
+		color: #92400e;
+	}
+
+	.timestamp {
+		font-size: 0.875rem;
+		color: #64748b;
+	}
+
+	.card-body {
+		padding: 1rem;
+		flex: 1;
+	}
+
+	h2 {
+		font-size: 1.125rem;
+		margin: 0 0 0.5rem 0;
+	}
+
+	.location {
+		color: #475569;
+		font-size: 0.875rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.description {
+		color: #334155;
+		font-size: 0.95rem;
+		line-height: 1.5;
+	}
+
+	.image-preview img {
+		width: 100%;
+		height: 150px;
+		object-fit: cover;
+		border-radius: 8px;
+		margin-top: 1rem;
+	}
+
+	.reporter {
+		margin-top: 1rem;
+		color: #94a3b8;
+	}
+
+	.card-actions {
+		padding: 1rem;
+		border-top: 1px solid #e2e8f0;
+		background: #f8fafc;
+	}
+
+	.action-form {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+	}
+
+	.btn {
+		padding: 0.5rem;
+		border: none;
+		border-radius: 6px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: opacity 0.2s;
+	}
+
+	.btn:hover {
+		opacity: 0.9;
+	}
+
+	.approve {
+		background-color: #22c55e;
+		color: white;
+	}
+
+	.reject {
+		background-color: #ef4444;
+		color: white;
+	}
+
+	.empty-state {
+		text-align: center;
+		padding: 4rem;
+		background: #f8fafc;
+		border-radius: 12px;
+		color: #64748b;
+	}
 </style>
