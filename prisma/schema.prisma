@@ -18,10 +18,10 @@ model TrafficSummary {
   id          String   @id @default(cuid())
   areaName    String
   routeName   String
-  condition   String // e.g., "Clear", "Moderate", "Heavy", "Blocked"
+  condition   String
   description String?
-  reportCount Int      @default(0) // Number of crowd reports
-  severity    Int      @default(1) // 1-5 scale
+  reportCount Int      @default(0)
+  severity    Int      @default(1)
   lastUpdated DateTime @default(now())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -35,13 +35,13 @@ model Incident {
   id          String   @id @default(cuid())
   title       String
   description String
-  type        String // e.g., "Accident", "Roadblock", "Construction", "Other"
+  type        String
   location    String
   latitude    Float?
   longitude   Float?
-  photoUrl    String? // URL to uploaded photo
-  status      String   @default("Active") // "Active", "Resolved", "Verified"
-  reportedBy  String? // User identifier (optional)
+  photoUrl    String?
+  status      String   @default("Active")
+  reportedBy  String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
