@@ -3,21 +3,20 @@ import { fail } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async () => {
+    const parkingSpots = await prisma.parkingSpot.findMany({
+        orderBy: {
+            createdAt: 'desc'
+        },
+        select: {
+            id: true,
+            address: true,
+            location: true,
+            ownerId: true,
+        }
+    });
 
 
-    return {
-        parkingSpots: await prisma.parkingSpot.findMany({
-            orderBy: {
-                createdAt: 'desc'
-            },
-            select: {
-                id: true,
-                address: true,
-                location: true,
-                ownerId: true,
-            }
-        }),
-    };
+    return { parkingSpots };
 
 };
 
