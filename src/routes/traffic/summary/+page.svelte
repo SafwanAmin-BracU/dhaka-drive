@@ -3,7 +3,7 @@
 
 	let { data }: PageProps = $props();
 
-	// Helper for condition styling
+
 	const getConditionStyle = (condition: string) => {
 		const c = condition.toLowerCase();
 		if (c.includes("heavy") || c.includes("blocked"))
