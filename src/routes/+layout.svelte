@@ -3,6 +3,13 @@
 	import type { LayoutProps } from "./$types";
 
 	let { data, children }: LayoutProps = $props();
+
+	const links = [
+		{ href: "/admin/verification", label: "Admin Verification" },
+		{ href: "/services/emergency", label: "Emergency Services" },
+		{ href: "/parking", label: "Parking Listings" },
+		{ href: "/traffic/summary", label: "Traffic Summary" },
+	];
 </script>
 
 <div class="min-h-screen bg-slate-100 text-slate-800 font-sans antialiased">
@@ -20,21 +27,15 @@
 		</div>
 
 		<ul class="space-x-3 flex">
-			<!-- HOME AND CONTACT PAGE LINK -->
-			<li>
-				<a
-					href="/"
-					class="text-slate-700 hover:text-slate-900 font-medium px-4 py-2 rounded-lg transition"
-					>Home</a
-				>
-			</li>
-			<li>
-				<a
-					href="/contact"
-					class="text-slate-700 hover:text-slate-900 font-medium px-4 py-2 rounded-lg transition"
-					>Contact</a
-				>
-			</li>
+			{#each links as link}
+				<li>
+					<a
+						href={link.href}
+						class="text-slate-700 hover:text-indigo-600 font-medium px-3 py-2 rounded-md hover:bg-slate-50 transition"
+						>{link.label}</a
+					>
+				</li>
+			{/each}
 		</ul>
 	</nav>
 
