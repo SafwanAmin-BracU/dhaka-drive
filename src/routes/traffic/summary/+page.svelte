@@ -7,12 +7,9 @@
 	const getConditionStyle = (condition: string) => {
 		const c = condition.toLowerCase();
 		if (c.includes("heavy") || c.includes("blocked"))
-			// High-Severity (Red/Danger) - Increased contrast
 			return "bg-red-50 text-red-800 border-red-300";
 		if (c.includes("moderate"))
-			// Moderate-Severity (Orange/Warning) - Increased contrast
 			return "bg-amber-50 text-amber-800 border-amber-300";
-		// Low-Severity (Emerald/Success) - Increased contrast and visual warmth
 		return "bg-teal-50 text-teal-800 border-teal-300";
 	};
 </script>
