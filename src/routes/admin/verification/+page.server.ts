@@ -1,11 +1,10 @@
 import { fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
-import { prisma } from '$lib/prisma'; // Adjust path to your prisma client instance
+import { usePrisma } from '$lib/prisma'; // Adjust path to your prisma client instance
 
 export const load: PageServerLoad = async () => {
   try {
-    // Fetch all incidents that currently have the default 'Active' status
-    // We are treating 'Active' as the "Waiting for Verification" queue
+    const prisma = await usePrisma();
     const unverifiedIncidents = await prisma.incident.findMany({
       where: {
         status: 'Active'
@@ -26,6 +25,7 @@ export const load: PageServerLoad = async () => {
 
 export const actions: Actions = {
   approve: async ({ request }) => {
+    const prisma = await usePrisma();
     const formData = await request.formData();
     const id = formData.get('id') as string;
 
@@ -43,6 +43,7 @@ export const actions: Actions = {
   },
 
   reject: async ({ request }) => {
+    const prisma = await usePrisma();
     const formData = await request.formData();
     const id = formData.get('id') as string;
 

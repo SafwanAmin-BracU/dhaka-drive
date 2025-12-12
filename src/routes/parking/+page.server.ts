@@ -1,8 +1,9 @@
-import { prisma } from "$lib/prisma";
+import { usePrisma } from "$lib/prisma";
 import { fail } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async () => {
+    const prisma = await usePrisma();
     const parkingSpots = await prisma.parkingSpot.findMany({
         orderBy: {
             createdAt: 'desc'
@@ -21,6 +22,7 @@ export const load: PageServerLoad = async () => {
 
 export const actions: Actions = {
     createSpot: async ({ request }) => {
+        const prisma = await usePrisma();
         const data = await request.formData();
 
         const ownerId = data.get("ownerId")?.toString();
