@@ -1,15 +1,9 @@
 <script lang="ts">
-	import "./layout.css";
+	import "$lib/app.css";
 	import type { LayoutProps } from "./$types";
 
 	let { data, children }: LayoutProps = $props();
-
-	const links = [
-		{ href: "/admin/verification", label: "Admin Verification" },
-		{ href: "/services/emergency", label: "Emergency Services" },
-		{ href: "/parking", label: "Parking Listings" },
-		{ href: "/traffic/summary", label: "Traffic Summary" },
-	];
+	import links from "./navLinks";
 </script>
 
 <div class="min-h-screen bg-slate-100 text-slate-800 font-sans antialiased">
