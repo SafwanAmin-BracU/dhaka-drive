@@ -1,50 +1,28 @@
 import {prisma} from '$lib/prisma';
 import { fail, type Actions } from '@sveltejs/kit';
 
-/**
-
-
- */
-export const load = async () => {
-	try {
-		const incidents = await prisma.incident.findMany({
-			orderBy: { createdAt: 'desc' }, 
-			take: 50 
-		});
-
-		return { incidents };
-	} catch (error) {
-		console.error('Database Error:', error);
-		return { incidents: [] };
-	}
-};
-
-
 export const actions = {
 	create: async ({ request }) => {
 		const data = await request.formData();
 
-		
 		const title = data.get('title')?.toString();
 		const description = data.get('description')?.toString();
 		const type = data.get('type')?.toString();
-		const location = data.get('location')?.toString();
-		const photoUrl = data.get('photoUrl')?.toString();
+		const location = data.get('location')?.toString(); // [cite: 5]
+		const photoUrl = data.get('photoUrl')?.toString(); // [cite: 8]
 
-		
 		if (!title || !description || !type || !location) {
 			return fail(400, { missing: true, message: 'All required fields must be filled.' });
 		}
 
 		try {
-			
 			await prisma.incident.create({
 				data: {
 					title,
 					description,
 					type,
 					location,
-					photoUrl: photoUrl || null, 
+					photoUrl: photoUrl || null,
 					status: 'Active'
 				}
 			});
