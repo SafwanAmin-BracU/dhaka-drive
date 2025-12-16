@@ -13,29 +13,25 @@ export const serviceTypeEnum = pgEnum("service_type", ["Towing", "Mechanic", "Ca
 
 
 // --- 1. CORE USER MANAGEMENT ---
-// One table for all users. No rigid roles.
 export const users = pgTable("users", {
     id: uuid("id").defaultRandom().primaryKey(),
     fullName: varchar("full_name", { length: 255 }).notNull(),
     email: varchar("email", { length: 255 }).notNull().unique(),
     passwordHash: varchar("password_hash").notNull(),
-    // Optional: Simple flag if you need someone to delete bad data
     isAdmin: boolean("is_admin").default(false),
     createdAt: timestamp("created_at").defaultNow(),
 });
 
 // --- 2. TRAFFIC MODULE ---
-// Completely independent. Users drop pins for status or incidents.
 export const trafficReports = pgTable("traffic_reports", {
     id: uuid("id").defaultRandom().primaryKey(),
     userId: uuid("user_id").references(() => users.id).notNull(),
-    status: trafficStatusEnum("status").notNull(), // Heavy, Moderate, Clear
-    location: geometry('location', { type: 'point', mode: 'xy', srid: 4326 }).notNull(), // PostGIS Point
+    status: trafficStatusEnum("status").notNull(),
+    location: geometryPoint("location").notNull(),
     reportedAt: timestamp("reported_at").defaultNow(),
-    // Data is auto-verified if confirmed by X users (logic handled in app code)
     confirmations: integer("confirmations").default(0),
 }, (table) => ({
-    spatialIndex: index("traffic_idx").using("gist", table.location), // Critical for map performance
+    spatialIndex: index("traffic_idx").using("gist", table.location),
 }));
 
 export const incidents = pgTable("incidents", {
@@ -44,7 +40,7 @@ export const incidents = pgTable("incidents", {
     type: incidentTypeEnum("type").notNull(),
     description: text("description"),
     imageUrl: varchar("image_url"),
-    location: geometry('location', { type: 'point', mode: 'xy', srid: 4326 }).notNull(),
+    location: geometryPoint("location").notNull(),
     isResolved: boolean("is_resolved").default(false),
     reportedAt: timestamp("reported_at").defaultNow(),
 }, (table) => ({
@@ -52,13 +48,12 @@ export const incidents = pgTable("incidents", {
 }));
 
 // --- 3. PARKING MODULE ---
-// Independent marketplace. Any user can be an 'owner' by adding a row here.
 export const parkingLocations = pgTable("parking_locations", {
     id: uuid("id").defaultRandom().primaryKey(),
-    ownerId: uuid("owner_id").references(() => users.id).notNull(), // The user who lists the spot
-    name: varchar("name", { length: 255 }).notNull(), // e.g., "Motalib Plaza Basement"
+    ownerId: uuid("owner_id").references(() => users.id).notNull(),
+    name: varchar("name", { length: 255 }).notNull(),
     address: text("address").notNull(),
-    location: geometry('location', { type: 'point', mode: 'xy', srid: 4326 }).notNull(),
+    location: geometryPoint("location").notNull(),
     totalSlots: integer("total_slots").notNull(),
     pricePerHour: decimal("price_per_hour", { precision: 10, scale: 2 }).notNull(),
     isActive: boolean("is_active").default(true),
@@ -69,7 +64,7 @@ export const parkingLocations = pgTable("parking_locations", {
 
 export const parkingBookings = pgTable("parking_bookings", {
     id: uuid("id").defaultRandom().primaryKey(),
-    userId: uuid("user_id").references(() => users.id).notNull(), // The user parking the car
+    userId: uuid("user_id").references(() => users.id).notNull(),
     parkingId: uuid("parking_id").references(() => parkingLocations.id).notNull(),
     startTime: timestamp("start_time").notNull(),
     endTime: timestamp("end_time").notNull(),
@@ -79,13 +74,12 @@ export const parkingBookings = pgTable("parking_bookings", {
 });
 
 // --- 4. SERVICES MODULE ---
-// Independent directory. Users create a profile here to offer services.
 export const serviceProfiles = pgTable("service_profiles", {
     id: uuid("id").defaultRandom().primaryKey(),
-    userId: uuid("user_id").references(() => users.id).notNull(), // The provider
+    userId: uuid("user_id").references(() => users.id).notNull(),
     businessName: varchar("business_name", { length: 255 }).notNull(),
     serviceType: serviceTypeEnum("service_type").notNull(),
-    location: geometry('location', { type: 'point', mode: 'xy', srid: 4326 }).notNull(),
+    location: geometryPoint("location").notNull(),
     phoneContact: varchar("phone_contact", { length: 50 }).notNull(),
     description: text("description"),
     isVerified: boolean("is_verified").default(false),
@@ -93,11 +87,10 @@ export const serviceProfiles = pgTable("service_profiles", {
     spatialIndex: index("service_idx").using("gist", table.location),
 }));
 
-// Saved/Favorite providers for easy access
 export const savedServices = pgTable("saved_services", {
     userId: uuid("user_id").references(() => users.id).notNull(),
     serviceProfileId: uuid("service_profile_id").references(() => serviceProfiles.id).notNull(),
     createdAt: timestamp("created_at").defaultNow(),
 }, (table) => ({
-    pk: index("saved_pk").on(table.userId, table.serviceProfileId), // Composite key logic
+    pk: index("saved_pk").on(table.userId, table.serviceProfileId),
 }));
