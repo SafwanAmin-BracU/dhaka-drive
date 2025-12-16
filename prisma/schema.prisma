@@ -32,16 +32,16 @@ model TrafficSummary {
 
 // Model for Incident Report System
 model Incident {
-  id          String   @id @default(cuid())
-  title       String
-  description String
-  type        String
-  location    String
-  latitude    Float?
-  longitude   Float?
-  photoUrl    String?
-  status      String   @default("Active")
-  reportedBy  String?
+  id          String   @id @default(cuid()) // Unique ID
+  title       String   // Summary of the incident
+  description String   // Detailed explanation
+  type        String   // e.g., "Accident", "Roadblock", "Hazard"
+  location    String   // Textual location (e.g., "Main St.")
+  latitude    Float?   // Optional GPS data
+  longitude   Float?   // Optional GPS data
+  photoUrl    String?  // Optional link to a photo
+  status      String   @default("Active") // Active, Resolved
+  reportedBy  String?  // Optional user ID or name
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
