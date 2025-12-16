@@ -59,10 +59,27 @@ model ParkingSpot {
   createdAt      DateTime @default(now())
 }
 
+
+
+model ServiceRequest {
+  id          String   @id @default(cuid())
+  userName    String
+  contactInfo String
+  issueType   String
+  location    String
+  status      String   @default("SEARCHING") // SEARCHING, MATCHED, COMPLETED
+  createdAt   DateTime @default(now())
+}
+
+// The Mechanics/Garages available in Dhaka
+
 model ServiceProvider {
-  id       String  @id @default(cuid())
-  name     String
-  type     String
-  phone    String?
-  location String?
+  id          String   @id @default(cuid())
+  name        String
+  phone       String
+  // We add @default so the 15 old rows don't crash
+  specialty   String   @default("General Mechanic") 
+  location    String   @default("Unknown")
+  isAvailable Boolean  @default(true)
+  rating      Float    @default(4.0)
 }
