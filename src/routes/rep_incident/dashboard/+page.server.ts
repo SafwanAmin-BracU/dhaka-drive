@@ -2,7 +2,6 @@ import {prisma} from '$lib/prisma';
 
 export const load = async () => {
 	try {
-		// Fetch incidents from DB [cite: 4]
 		const incidents = await prisma.incident.findMany({
 			orderBy: { createdAt: 'desc' },
 			take: 50
