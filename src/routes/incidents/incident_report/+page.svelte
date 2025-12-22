@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
 	import { enhance } from '$app/forms';
 
 	let { form } = $props();
@@ -17,7 +17,6 @@
 		<div class="h-2 bg-indigo-600 w-full"></div>
 
 		<div class="card-body p-8">
-			
 			<div class="flex justify-end mb-4">
 				<a href="/incidents/dashboard" class="text-sm font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 transition-colors">
 					View Live Dashboard &rarr;
@@ -43,14 +42,14 @@
 							type="text"
 							name="title"
 							placeholder="e.g. Minor Collision"
-							class="input input-bordered w-full focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 bg-slate-50"
+							class="input input-bordered w-full focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 bg-slate-50"
 							required
 						/>
 					</div>
 
 					<div class="form-control">
 						<label class="label font-semibold text-slate-700" for="type">Incident Type</label>
-						<select name="type" class="select select-bordered w-full focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 bg-slate-50 text-slate-700" required>
+						<select name="type" class="select select-bordered w-full focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 bg-slate-50 text-slate-700" required>
 							<option disabled selected>Select Category</option>
 							<option value="Accident">🚗 Accident</option>
 							<option value="Roadblock">⛔ Roadblock</option>
@@ -60,30 +59,18 @@
 					</div>
 				</div>
 
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-					<div class="form-control">
-						<label class="label font-semibold text-slate-700" for="location">Location</label>
-						<div class="relative">
-							<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-								📍
-							</span>
-							<input
-								type="text"
-								name="location"
-								placeholder="e.g. Gulshan 1 Circle"
-								class="input input-bordered w-full pl-10 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 bg-slate-50"
-								required
-							/>
-						</div>
-					</div>
-
-					<div class="form-control">
-						<label class="label font-semibold text-slate-700" for="photoUrl">Photo URL <span class="text-slate-400 font-normal text-xs ml-1">(Optional)</span></label>
+				<div class="form-control">
+					<label class="label font-semibold text-slate-700" for="location">Location</label>
+					<div class="relative">
+						<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+							📍
+						</span>
 						<input
-							type="url"
-							name="photoUrl"
-							placeholder="https://..."
-							class="input input-bordered w-full focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 bg-slate-50"
+							type="text"
+							name="location"
+							placeholder="e.g. Gulshan 1 Circle"
+							class="input input-bordered w-full pl-10 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 bg-slate-50"
+							required
 						/>
 					</div>
 				</div>
@@ -92,8 +79,8 @@
 					<label class="label font-semibold text-slate-700" for="description">Description</label>
 					<textarea
 						name="description"
-						class="textarea textarea-bordered h-32 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 bg-slate-50 text-base"
-						placeholder="Please provide details about the traffic situation..."
+						class="textarea textarea-bordered w-full h-40 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 bg-slate-50 text-base leading-relaxed p-4 shadow-sm"
+						placeholder="Please describe the incident details here..."
 						required
 					></textarea>
 				</div>
@@ -110,12 +97,7 @@
 						class="btn bg-indigo-600 hover:bg-indigo-700 text-white w-full border-none text-lg shadow-md hover:shadow-lg transition-all"
 						disabled={isSubmitting}
 					>
-						{#if isSubmitting}
-							<span class="loading loading-spinner"></span>
-							Submitting...
-						{:else}
-							Submit Report
-						{/if}
+						{isSubmitting ? 'Submitting...' : 'Submit Report'}
 					</button>
 				</div>
 			</form>
