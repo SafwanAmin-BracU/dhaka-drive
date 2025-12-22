@@ -9,7 +9,6 @@ export const actions = {
 		const description = data.get('description')?.toString();
 		const type = data.get('type')?.toString();
 		const location = data.get('location')?.toString();
-		// Removed photoUrl extraction
 
 		if (!title || !description || !type || !location) {
 			return fail(400, { missing: true, message: 'All required fields must be filled.' });
@@ -22,7 +21,6 @@ export const actions = {
 					description,
 					type,
 					location,
-					// Removed photoUrl field
 					status: 'Active'
 				}
 			});
