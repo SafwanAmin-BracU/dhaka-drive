@@ -84,9 +84,6 @@
 							<span class="text-xs font-medium text-slate-400">
 								{new Date(incident.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
 							</span>
-							<div class="badge badge-sm badge-ghost text-xs uppercase tracking-wider">
-								{incident.status}
-							</div>
 						</div>
 					</div>
 				</div>

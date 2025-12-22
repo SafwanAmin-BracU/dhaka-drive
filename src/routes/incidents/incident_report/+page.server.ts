@@ -21,7 +21,6 @@ export const actions = {
 					description,
 					type,
 					location,
-					status: 'Active'
 				}
 			});
 
