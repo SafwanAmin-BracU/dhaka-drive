@@ -1,163 +1,98 @@
 {
-  "id": "439d3efa-9098-4c42-84a4-ad8851e6da76",
-  "prevId": "764d1c45-c099-422b-8011-bcdcd23f9a8e",
+  "id": "3d2a6a50-c054-425e-a687-737f476a0ad5",
+  "prevId": "997c5678-155f-483b-9568-6de012408c1c",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.Incident": {
-      "name": "Incident",
+    "public.bookings": {
+      "name": "bookings",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
-        "title": {
-          "name": "title",
-          "type": "text",
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "type": {
-          "name": "type",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "location": {
-          "name": "location",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "latitude": {
-          "name": "latitude",
-          "type": "double precision",
+        "parking_spot_id": {
+          "name": "parking_spot_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
-        "longitude": {
-          "name": "longitude",
-          "type": "double precision",
+        "start_time": {
+          "name": "start_time",
+          "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "photoUrl": {
-          "name": "photoUrl",
-          "type": "text",
+        "end_time": {
+          "name": "end_time",
+          "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "status": {
           "name": "status",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'Active'"
+          "notNull": false,
+          "default": "'confirmed'"
         },
-        "reportedBy": {
-          "name": "reportedBy",
-          "type": "text",
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp(3)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "CURRENT_TIMESTAMP"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp(3)",
-          "primaryKey": false,
-          "notNull": true
+          "notNull": false,
+          "default": "now()"
         }
       },
-      "indexes": {
-        "Incident_createdAt_idx": {
-          "name": "Incident_createdAt_idx",
-          "columns": [
-            {
-              "expression": "createdAt",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last",
-              "opclass": "timestamp_ops"
-            }
+      "indexes": {},
+      "foreignKeys": {
+        "bookings_parking_spot_id_parking_spots_id_fk": {
+          "name": "bookings_parking_spot_id_parking_spots_id_fk",
+          "tableFrom": "bookings",
+          "tableTo": "parking_spots",
+          "columnsFrom": [
+            "parking_spot_id"
           ],
-          "isUnique": false,
-          "with": {},
-          "method": "btree",
-          "concurrently": false
-        },
-        "Incident_status_idx": {
-          "name": "Incident_status_idx",
-          "columns": [
-            {
-              "expression": "status",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
-            }
+          "columnsTo": [
+            "id"
           ],
-          "isUnique": false,
-          "with": {},
-          "method": "btree",
-          "concurrently": false
-        },
-        "Incident_type_idx": {
-          "name": "Incident_type_idx",
-          "columns": [
-            {
-              "expression": "type",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
-            }
-          ],
-          "isUnique": false,
-          "with": {},
-          "method": "btree",
-          "concurrently": false
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
-      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.ParkingSpot": {
-      "name": "ParkingSpot",
+    "public.parking_spots": {
+      "name": "parking_spots",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
-        "ownerId": {
-          "name": "ownerId",
-          "type": "text",
+        "owner_id": {
+          "name": "owner_id",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "location": {
-          "name": "location",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -166,90 +101,40 @@
           "name": "address",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
-        },
-        "additionalInfo": {
-          "name": "additionalInfo",
-          "type": "text",
-          "primaryKey": false,
           "notNull": false
         },
-        "lastUpdated": {
-          "name": "lastUpdated",
-          "type": "timestamp(3)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "CURRENT_TIMESTAMP"
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp(3)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "CURRENT_TIMESTAMP"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public._prisma_migrations": {
-      "name": "_prisma_migrations",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "checksum": {
-          "name": "checksum",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "finished_at": {
-          "name": "finished_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "migration_name": {
-          "name": "migration_name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "logs": {
-          "name": "logs",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "rolled_back_at": {
-          "name": "rolled_back_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "started_at": {
-          "name": "started_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "applied_steps_count": {
-          "name": "applied_steps_count",
+        "total_slots": {
+          "name": "total_slots",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "default": 0
+          "default": 1
+        },
+        "is_available": {
+          "name": "is_available",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "price_per_hour": {
+          "name": "price_per_hour",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "location": {
+          "name": "location",
+          "type": "geometry(point)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -260,13 +145,65 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.ServiceProvider": {
-      "name": "ServiceProvider",
+    "public.saved_providers": {
+      "name": "saved_providers",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider_id": {
+          "name": "provider_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "saved_providers_provider_id_service_providers_id_fk": {
+          "name": "saved_providers_provider_id_service_providers_id_fk",
+          "tableFrom": "saved_providers",
+          "tableTo": "service_providers",
+          "columnsFrom": [
+            "provider_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.service_providers": {
+      "name": "service_providers",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
@@ -278,21 +215,35 @@
         },
         "type": {
           "name": "type",
+          "type": "service_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contact_info": {
+          "name": "contact_info",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "phone": {
-          "name": "phone",
+        "address": {
+          "name": "address",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
         "location": {
           "name": "location",
-          "type": "text",
+          "type": "geometry(point)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "rating": {
+          "name": "rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
         }
       },
       "indexes": {},
@@ -303,53 +254,112 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.ServiceRequest": {
-      "name": "ServiceRequest",
+    "public.service_requests": {
+      "name": "service_requests",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
-        "userName": {
-          "name": "userName",
-          "type": "text",
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "contactInfo": {
-          "name": "contactInfo",
-          "type": "text",
+        "provider_id": {
+          "name": "provider_id",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "issueType": {
-          "name": "issueType",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "location": {
-          "name": "location",
+        "issue_description": {
+          "name": "issue_description",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "status": {
           "name": "status",
+          "type": "request_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'Pending'"
+        },
+        "user_location": {
+          "name": "user_location",
+          "type": "geometry(point)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "service_requests_provider_id_service_providers_id_fk": {
+          "name": "service_requests_provider_id_service_providers_id_fk",
+          "tableFrom": "service_requests",
+          "tableTo": "service_providers",
+          "columnsFrom": [
+            "provider_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.traffic_news": {
+      "name": "traffic_news",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'SEARCHING'"
+          "notNull": true
         },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp(3)",
+        "content": {
+          "name": "content",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "default": "CURRENT_TIMESTAMP"
+          "notNull": true
+        },
+        "source": {
+          "name": "source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "published_at": {
+          "name": "published_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -360,31 +370,26 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.TrafficSummary": {
-      "name": "TrafficSummary",
+    "public.traffic_reports": {
+      "name": "traffic_reports",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
-        "areaName": {
-          "name": "areaName",
-          "type": "text",
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "routeName": {
-          "name": "routeName",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "condition": {
-          "name": "condition",
-          "type": "text",
+        "status": {
+          "name": "status",
+          "type": "traffic_status",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
@@ -394,75 +399,34 @@
           "primaryKey": false,
           "notNull": false
         },
-        "reportCount": {
-          "name": "reportCount",
-          "type": "integer",
+        "image_url": {
+          "name": "image_url",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "default": 0
+          "notNull": false
         },
-        "severity": {
-          "name": "severity",
-          "type": "integer",
+        "is_verified": {
+          "name": "is_verified",
+          "type": "boolean",
           "primaryKey": false,
-          "notNull": true,
-          "default": 1
+          "notNull": false,
+          "default": false
         },
-        "lastUpdated": {
-          "name": "lastUpdated",
-          "type": "timestamp(3)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "CURRENT_TIMESTAMP"
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp(3)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "CURRENT_TIMESTAMP"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp(3)",
+        "location": {
+          "name": "location",
+          "type": "geometry(point)",
           "primaryKey": false,
           "notNull": true
-        }
-      },
-      "indexes": {
-        "TrafficSummary_areaName_idx": {
-          "name": "TrafficSummary_areaName_idx",
-          "columns": [
-            {
-              "expression": "areaName",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
-            }
-          ],
-          "isUnique": false,
-          "with": {},
-          "method": "btree",
-          "concurrently": false
         },
-        "TrafficSummary_condition_idx": {
-          "name": "TrafficSummary_condition_idx",
-          "columns": [
-            {
-              "expression": "condition",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
-            }
-          ],
-          "isUnique": false,
-          "with": {},
-          "method": "btree",
-          "concurrently": false
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
         }
       },
+      "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
@@ -471,12 +435,43 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {},
+  "enums": {
+    "public.request_status": {
+      "name": "request_status",
+      "schema": "public",
+      "values": [
+        "Pending",
+        "Accepted",
+        "Completed",
+        "Cancelled"
+      ]
+    },
+    "public.service_type": {
+      "name": "service_type",
+      "schema": "public",
+      "values": [
+        "Mechanic",
+        "Towing",
+        "CarWash",
+        "Emergency",
+        "Fuel"
+      ]
+    },
+    "public.traffic_status": {
+      "name": "traffic_status",
+      "schema": "public",
+      "values": [
+        "Heavy",
+        "Moderate",
+        "Clear"
+      ]
+    }
+  },
   "schemas": {},
-  "views": {},
   "sequences": {},
   "roles": {},
   "policies": {},
+  "views": {},
   "_meta": {
     "columns": {},
     "schemas": {},

@@ -3,11 +3,16 @@
 declare global {
 	namespace App {
 		// interface Error {}
-		// interface Locals {}
+		interface Locals {
+			drizzle: import('$lib/drizzle').dbRef;
+			schema: import('$lib/drizzle').schemaRef;
+
+
+		}
 		// interface PageData {}
 		// interface PageState {}
 		// interface Platform {}
 	}
 }
 
-export {};
+export { };
