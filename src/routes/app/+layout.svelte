@@ -4,13 +4,6 @@
 	import type { LayoutProps } from "./$types";
 
 	let { data, children }: LayoutProps = $props();
-	const navLinks: NavLink[] = [
-		{ href: "/app", label: "Dashboard" },
-		{ href: "/app/admin", label: "Admin" },
-		{ href: "/app/services", label: "Services" },
-		{ href: "/app/parking", label: "Parking" },
-		{ href: "/app/traffic", label: "Traffic" },
-	];
 </script>
 
 <div class="min-h-screen bg-slate-100 text-slate-800 font-sans antialiased">
