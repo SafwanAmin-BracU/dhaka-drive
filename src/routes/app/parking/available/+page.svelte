@@ -29,7 +29,7 @@
 	onMount(() => {
 		const interval = setInterval(() => {
 			invalidate("app:parking-available"); // Refetches 'load' function
-		}, 900); // 9 seconds (9ms would freeze the browser)
+		}, 1100); // 9 seconds (9ms would freeze the browser)
 
 		return () => clearInterval(interval);
 	});
@@ -143,10 +143,12 @@
 							>
 								{spot.isAvailable ? "Available" : "Full"}
 							</div>
-							<button
+							<a
+								href="/app/parking/book/{spot.id}"
 								class="btn btn-xs btn-outline btn-primary w-full"
-								>Book Slot</button
 							>
+								Book Slot
+							</a>
 						</div>
 					</Popup>
 				</DefaultMarker>
