@@ -133,3 +133,41 @@ export const savedProviders = pgTable('saved_providers', {
     providerId: integer('provider_id').references(() => serviceProviders.id).notNull(),
     createdAt: timestamp('created_at').defaultNow(),
 });
+
+// ... existing code ...
+
+// ----------------------------------------------------------------------
+// NEW: Service Appointments (Module 3 Feature 3)
+// ----------------------------------------------------------------------
+
+// "Users can schedule carwash or maintenance services"
+export const serviceAppointments = pgTable('service_appointments', {
+    id: serial('id').primaryKey(),
+    userId: integer('user_id').notNull(), // Link to your User auth table
+    providerId: integer('provider_id').references(() => serviceProviders.id).notNull(),
+
+    appointmentTime: timestamp('appointment_time').notNull(),
+    serviceType: text('service_type').notNull(), // e.g. "Full Wash", "Oil Change"
+    notes: text('notes'),
+
+    status: text('status').default('confirmed'), // confirmed, completed, cancelled
+    createdAt: timestamp('created_at').defaultNow(),
+});
+
+export const userFeedback = pgTable('user_feedback', {
+    id: serial('id').primaryKey(),
+
+    // Sender Details
+    name: text('name').notNull(),
+    email: text('email').notNull(),
+
+    // Message Content
+    subject: text('subject').notNull(),
+    message: text('message').notNull(),
+
+    // Status flags
+    isRead: boolean('is_read').default(false).notNull(),
+
+    // Timestamps
+    createdAt: timestamp('created_at').defaultNow().notNull()
+});

@@ -15,6 +15,20 @@
       "when": 1766455769153,
       "tag": "0001_burly_jack_murdock",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1766522695235,
+      "tag": "0002_thankful_wallow",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1766528495216,
+      "tag": "0003_sour_butterfly",
+      "breakpoints": true
     }
   ]
 }
