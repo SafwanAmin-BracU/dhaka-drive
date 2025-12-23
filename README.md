@@ -22,8 +22,8 @@ DhakaDrive is a comprehensive web application designed to simplify city life in 
 ### 🚦 Module 1: Traffic Information & Reporting
 
 - **Area-Based Traffic Summary:** View summarized traffic conditions for major routes based on real-time crowd reports.
-- **Crowd-Based Updates:** Users can submit status updates ("Heavy", "Moderate", "Clear") for their current location.
 - **Incident Reporting:** Report accidents or roadblocks with descriptions and photos.
+- **Crowd-Based Updates:** Users can submit status updates ("Heavy", "Moderate", "Clear") for their current location.
 - **Traffic News Panel:** Daily updates on road closures and traffic news from verified sources.
 
 ### 🅿️ Module 2: Parking Locator & Management
