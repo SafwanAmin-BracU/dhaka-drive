@@ -1,50 +1,76 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+SYNC IMPACT REPORT
+Version change: 0.0.0 -> 1.0.0
+Modified principles: All (Initial definition)
+Added sections: None
+Removed sections: None
+Templates requiring updates: None
+Follow-up TODOs: None
+-->
+
+# DhakaDrive Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Schema-Driven Development
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+The Drizzle schema (`src/lib/drizzle/schema.ts`) is the single source of truth for data models. All database interactions must be type-safe and aligned with the schema. Migrations must be generated and applied consistently using Drizzle Kit. Direct SQL queries should be avoided unless absolutely necessary for performance, and must be documented.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### II. Strict Type Safety
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+TypeScript is mandatory for all code. `any` types are forbidden unless strictly justified and commented with a reason. Interfaces and types should be shared via `src/lib/index.ts` or `app.d.ts` where appropriate to ensure consistency across the application.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### III. Edge-Native Architecture
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+The application is deployed on Cloudflare Pages. All server-side code (loaders, actions, API routes) must be compatible with the Edge runtime. Avoid Node.js-only dependencies or APIs (like `fs`) unless polyfilled or strictly separated into build-time scripts.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### IV. Modular & Reactive UI
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+Use Svelte 5 runes and reactive primitives for state management. Logic should be encapsulated in reusable components or composables (lib files). Styles should use Tailwind utility classes and DaisyUI components to maintain consistency and reduce custom CSS.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### V. Feature Isolation
+
+Code related to specific modules (Traffic, Parking, Services, Admin) should be organized within the `routes` directory structure or dedicated `lib` folders to maintain separation of concerns. Shared utilities should be placed in `src/lib` but domain-specific logic must remain within its domain module.
+
+## Technical Standards
+
+### Technology Stack
+
+- **Language:** TypeScript / Svelte 5
+- **Meta-Framework:** SvelteKit 2.0
+- **Database:** PostgreSQL (via Neon)
+- **ORM:** Drizzle ORM
+- **Styling:** TailwindCSS, DaisyUI
+- **Package Manager:** Bun
+- **Deployment:** Cloudflare Pages
+
+### Code Quality
+
+- All code must pass linting and formatting checks (Prettier/ESLint).
+- Components should be small and focused on a single responsibility.
+- Server-side logic should be separated from UI components (use `+page.server.ts` or `+server.ts`).
+
+## Development Workflow
+
+### Review Process
+
+- All changes must be submitted via Pull Request.
+- PRs must pass all automated checks (build, lint, typecheck).
+- Database schema changes must include a corresponding migration file.
+
+### Testing Gates
+
+- Critical paths (Booking, Reporting) should have integration tests.
+- Utility functions must have unit tests.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This Constitution supersedes all other project documentation and practices. Any deviation requires an amendment to this document.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+### Amendments
+
+- Amendments require a Pull Request with a clear rationale.
+- Changes to Core Principles require unanimous agreement from maintainers.
+- Versioning follows Semantic Versioning (MAJOR.MINOR.PATCH).
+
+**Version**: 1.0.0 | **Ratified**: 2025-12-24 | **Last Amended**: 2025-12-24
