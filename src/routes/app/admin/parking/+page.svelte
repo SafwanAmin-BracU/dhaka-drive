@@ -48,7 +48,7 @@
 			<thead>
 				<tr class="bg-base-200 text-base-content uppercase text-sm">
 					<th>ID</th>
-					<th>Location Info</th>
+					<th>Location Info:</th>
 					<th>Capacity</th>
 					<th>Rate</th>
 					<th>Status</th>
