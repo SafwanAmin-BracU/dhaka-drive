@@ -1,0 +1,25 @@
+stages:
+  - deploy
+
+deploy-to-pages:
+  stage: deploy
+  image: oven/bun:latest
+  variables:
+    # Optional: cache bun dependencies for faster builds
+    BUN_INSTALL_CACHE_DIR: .bun-cache
+  cache:
+    paths:
+      - .bun-cache/
+  script:
+    - bun install
+    - bun run build
+    # Reads project name and output dir from your wrangler.jsonc
+    # Automatically assigns the branch name for Preview vs Production logic
+    - bunx wrangler pages deploy --branch=$CI_COMMIT_REF_NAME
+  rules:
+    # Run for the main branch (Production)
+    - if: $CI_COMMIT_BRANCH == "main"
+    # Run for the develop branch (Staging/Preview)
+    - if: $CI_COMMIT_BRANCH == "develop"
+    # Optional: To enable preview deploys for ALL branches, use:
+    # - if: $CI_COMMIT_BRANCH
