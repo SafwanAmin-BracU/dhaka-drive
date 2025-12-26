@@ -44,7 +44,7 @@ Follow-up TODOs: None
 Code MUST be organized into distinct layers with explicit responsibilities:
 
 | Layer | Location | Responsibility |
-|-------|----------|----------------|
+| ----- | -------- | -------------- |
 | Database Schema | `$lib/db/schema/` | Table definitions, enums, relations |
 | Validation | `$lib/db/validation.ts` | Zod schemas derived from Drizzle tables |
 | Server Logic | `$lib/server/[domain]/` | Queries and mutations—NEVER in route files |
