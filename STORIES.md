@@ -1,4 +1,3 @@
-<!-- markdownlint-disable-file MD036 -->
 # DhakaDrive: Detailed Technical Specification
 
 ## Module 1: Traffic Information & Reporting
