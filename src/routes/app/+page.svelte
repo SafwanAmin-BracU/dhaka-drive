@@ -1,10 +1,10 @@
 <script lang="ts">
+	import type { LngLat } from "maplibre-gl";
+	import { DefaultMarker, MapLibre, Popup } from "svelte-maplibre";
 	import type { PageProps } from "./$types";
-	import { DefaultMarker, MapEvents, MapLibre, Popup } from "svelte-maplibre";
-	import type { LngLat, MapMouseEvent } from "maplibre-gl";
 
 	let { data }: PageProps = $props();
-	let spot: LngLat = $state();
+	let spot: LngLat | undefined = $state();
 </script>
 
 <!-- <LeafletMap markers={[]} /> -->
