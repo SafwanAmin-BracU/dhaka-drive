@@ -1,20 +1,14 @@
 <!--
 SYNC IMPACT REPORT
-Version change: 2.2.0 -> 2.3.0
+Version change: 2.3.0 -> 2.4.0
 Modified principles:
-  - I. Layered Architecture (Removed testing benefit from rationale)
-  - IV. Component-Driven UI (Strict DaisyUI mandate added, custom CSS restriction strengthened)
-  - V. Server Logic Abstraction (Removed testing benefit from rationale)
+  - Added X. Documentation Authority (New mandate for 'context7')
 Modified sections:
-  - Technical Standards / Styling (Reiterated DaisyUI priority)
-  - Code Quality Standards (Added DaisyUI vs Utility Class directive)
-  - Review Process (Removed implicit automated testing requirement)
-Added sections:
-  - Testing Strategy (Explicit "No automated testing" directive)
+  - Technical Standards / Development Workflow
 Templates requiring updates:
   - plan-template.md: No changes needed ✅
   - spec-template.md: No changes needed ✅
-  - tasks-template.md: Removed testing tasks & logic ✅
+  - tasks-template.md: No changes needed ✅
 Follow-up TODOs: None
 -->
 
@@ -144,6 +138,15 @@ Authentication is managed via **Better Auth**.
 - "Tests" in task lists refer to manual verification steps, not code.
 
 **Rationale**: Prioritize rapid feature delivery and UI polish over test coverage for this phase of the project.
+
+### X. Documentation Authority
+
+Developers and Agents MUST utilize **'context7'** as the primary source for framework and library documentation, usage patterns, and best practices.
+
+- Before implementing features involving external libraries, check 'context7' for approved usage patterns.
+- Do not rely solely on general knowledge or external searches if 'context7' provides specific project-aligned guidance.
+
+**Rationale**: Ensures consistent, project-specific, and up-to-date implementation patterns across the codebase.
 
 ---
 
@@ -318,4 +321,4 @@ This Constitution supersedes all other project documentation and practices. Any 
 - Changes to Core Principles require unanimous agreement from maintainers
 - Versioning follows Semantic Versioning (MAJOR.MINOR.PATCH)
 
-**Version**: 2.3.0 | **Ratified**: 2025-12-24 | **Last Amended**: 2026-01-06
+**Version**: 2.4.0 | **Ratified**: 2025-12-24 | **Last Amended**: 2026-01-06
