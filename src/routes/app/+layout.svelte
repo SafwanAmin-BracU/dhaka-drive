@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { page } from "$app/state";
 	import "$lib/app.css";
 	import type { LayoutProps } from "./$types";
 
