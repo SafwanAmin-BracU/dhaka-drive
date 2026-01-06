@@ -1,33 +1,20 @@
 <!--
 SYNC IMPACT REPORT
-Version change: 1.0.0 -> 2.1.0
+Version change: 2.2.0 -> 2.3.0
 Modified principles:
-  - I. Schema-Driven Development → I. Layered Architecture (expanded to full separation of concerns)
-  - II. Strict Type Safety → II. Type Safety & Validation (added Zod requirement)
-  - III. Edge-Native Architecture → III. Edge-Native Architecture (unchanged)
-  - IV. Modular & Reactive UI → IV. Component-Driven UI (expanded with component library mandate)
-  - V. Feature Isolation → V. Server Logic Abstraction (new: server query/mutation pattern)
-  - NEW: VI. Route File Discipline
-  - NEW: VII. Authentication Pattern
-  - NEW: VIII. Form Handling Standard
+  - I. Layered Architecture (Removed testing benefit from rationale)
+  - IV. Component-Driven UI (Strict DaisyUI mandate added, custom CSS restriction strengthened)
+  - V. Server Logic Abstraction (Removed testing benefit from rationale)
+Modified sections:
+  - Technical Standards / Styling (Reiterated DaisyUI priority)
+  - Code Quality Standards (Added DaisyUI vs Utility Class directive)
+  - Review Process (Removed implicit automated testing requirement)
 Added sections:
-  - Architectural Directives (detailed layer responsibilities)
-  - Naming Conventions (comprehensive table)
-  - Route Structure Principles (hierarchy, groups, layouts)
-  - State Management (server, client, URL state)
-  - Error Handling (error type matrix)
-  - Utility Guidelines (required utilities)
-  - Constants (centralization mandate)
-  - Component Contracts (required components)
-  - Performance Directives
-  - Security Directives
-  - Code Quality Standards
-  - Feature Checklist
-Removed sections: Testing Gates
+  - Testing Strategy (Explicit "No automated testing" directive)
 Templates requiring updates:
-  - plan-template.md: Constitution Check should reference new principles ✅ (generic reference maintained)
+  - plan-template.md: No changes needed ✅
   - spec-template.md: No changes needed ✅
-  - tasks-template.md: No changes needed ✅
+  - tasks-template.md: Removed testing tasks & logic ✅
 Follow-up TODOs: None
 -->
 
@@ -52,7 +39,7 @@ Code MUST be organized into distinct layers with explicit responsibilities:
 | Utilities | `$lib/utils/` | Pure functions (date formatting, geo calculations) |
 | Routes | `src/routes/` | Thin orchestration—calls server functions, composes components |
 
-**Rationale**: Separation of concerns enables independent testing, reduces coupling, and makes the codebase navigable. Route files should be thin orchestrators, not business logic containers.
+**Rationale**: Separation of concerns reduces coupling, ensures clear data flow, and makes the codebase navigable. Route files should be thin orchestrators, not business logic containers.
 
 ### II. Type Safety & Validation
 
@@ -77,15 +64,14 @@ All server-side code MUST be compatible with Cloudflare Pages Edge runtime:
 
 ### IV. Component-Driven UI
 
-UI MUST be composed from reusable components:
+UI MUST be composed primarily from **DaisyUI** components:
 
-- Check `$lib/components/` before creating inline markup
-- If a UI pattern appears twice, it MUST be extracted to a component
-- Svelte 5 runes (`$state`, `$derived`, `$bindable`) for reactivity
-- Tailwind utility classes and DaisyUI components for styling
-- NO inline styles or custom CSS except in rare justified cases
+- **DaisyUI First**: Always use a standard DaisyUI component (e.g., `btn`, `card`, `modal`) if one exists.
+- **Minimal Custom CSS**: Writing custom CSS or `style` tags is **FORBIDDEN** unless absolutely unavoidable.
+- **Utility Constraint**: Raw Tailwind utility classes should only be used for layout (flex, grid, margin, padding). Visual styling (colors, borders, shadows) should leverage DaisyUI semantics (e.g., `btn-primary`, `alert-error`).
+- Svelte 5 runes (`$state`, `$derived`, `$bindable`) must be used for reactivity.
 
-**Rationale**: Component reuse ensures visual consistency, reduces bugs, and accelerates development. DaisyUI provides accessible, tested primitives.
+**Rationale**: Strict adherence to DaisyUI ensures visual consistency, reduces maintenance overhead, and speeds up development by avoiding "reinventing the wheel" for standard UI patterns.
 
 ### V. Server Logic Abstraction
 
@@ -93,7 +79,7 @@ Database interactions MUST flow through dedicated server modules:
 
 ```
 $lib/server/
-├── auth.ts              # getCurrentUser, requireAuth, requireAdmin
+├── auth.ts              # Better Auth client/helpers
 ├── traffic/
 │   ├── queries.ts       # Read operations
 │   └── mutations.ts     # Write operations
@@ -107,7 +93,7 @@ $lib/server/
 
 Route files are consumers only—they import and call these functions.
 
-**Rationale**: Centralizing database logic enables unit testing without HTTP, makes queries reusable across routes, and keeps route files focused on request/response handling.
+**Rationale**: Centralizing database logic enables strict logic isolation and reuse across routes, keeping route files focused purely on request/response handling.
 
 ### VI. Route File Discipline
 
@@ -126,25 +112,18 @@ Route files are consumers only—they import and call these functions.
 
 **Empty load functions are FORBIDDEN.** If a page needs no data, remove the `+page.server.ts` file entirely.
 
-**Rationale**: Thin route files are easier to review, test, and maintain. Empty files add noise and suggest incomplete implementation.
+**Rationale**: Thin route files are easier to review and maintain. Empty files add noise and suggest incomplete implementation.
 
 ### VII. Authentication Pattern
 
-Until authentication is fully implemented, use a centralized mock:
+Authentication is managed via **Better Auth**.
 
-```typescript
-// $lib/server/auth.ts
-export function getCurrentUserId(): number {
-    // TODO: Replace with session-based auth
-    return 1;
-}
-```
+- All auth checks MUST use the `better-auth` client/server APIs.
+- Protected routes MUST check session/user validity in `+layout.server.ts` or `+page.server.ts`.
+- User IDs must be retrieved from the active session.
+- During early development, if auth is not fully configured, a mock user function in `$lib/server/auth.ts` MAY be used but MUST be explicitly marked for replacement.
 
-**All user ID references MUST call this function**—NEVER hardcode `userId: 1` inline.
-
-Protected routes MUST check auth in layout or page server load.
-
-**Rationale**: Centralized mock enables easy replacement when real auth is added. Hardcoded IDs scattered through the codebase are impossible to find and fix.
+**Rationale**: `better-auth` provides a secure, type-safe, and feature-rich authentication solution, replacing custom implementations.
 
 ### VIII. Form Handling Standard
 
@@ -155,6 +134,16 @@ Protected routes MUST check auth in layout or page server load.
 5. Every form page MUST render `FormAlert` component for feedback
 
 **Rationale**: Consistent form handling reduces bugs and ensures users always receive feedback on their actions.
+
+### IX. Testing Strategy
+
+**Automated testing is NOT required.**
+
+- Development focus is on **manual validation** and **visual verification**.
+- Do not spend time writing unit, integration, or end-to-end tests unless explicitly requested for a critical module.
+- "Tests" in task lists refer to manual verification steps, not code.
+
+**Rationale**: Prioritize rapid feature delivery and UI polish over test coverage for this phase of the project.
 
 ---
 
@@ -168,7 +157,8 @@ Protected routes MUST check auth in layout or page server load.
 | Meta-Framework | SvelteKit 2.0 |
 | Database | PostgreSQL (Neon) with PostGIS |
 | ORM | Drizzle ORM |
-| Styling | Tailwind CSS v4 + DaisyUI |
+| Auth | Better Auth |
+| Styling | **DaisyUI** (Primary) + Tailwind CSS (Layout only) |
 | Maps | MapLibre GL via `svelte-maplibre` |
 | Package Manager | Bun |
 | Deployment | Cloudflare Pages |
@@ -281,12 +271,13 @@ Magic values MUST NOT be hardcoded in components or route files.
 
 ## Code Quality Standards
 
-1. **No empty files** — if unused, delete it
-2. **No duplicate code** — extract to component or utility
-3. **No `any` types** — explicit typing required
-4. **No inline styles** — use Tailwind classes
-5. **No console.log in production** — use proper error logging
-6. **Consistent imports** — barrel exports from `$lib/index.ts`
+1. **DaisyUI over Custom CSS** — if a DaisyUI class exists, USE IT.
+2. **No empty files** — if unused, delete it
+3. **No duplicate code** — extract to component or utility
+4. **No `any` types** — explicit typing required
+5. **No inline styles** — use Tailwind/DaisyUI classes
+6. **No console.log in production** — use proper error logging
+7. **Consistent imports** — barrel exports from `$lib/index.ts`
 
 ---
 
@@ -312,7 +303,7 @@ When adding a new feature, the following MUST be completed:
 ### Review Process
 
 - All changes MUST be submitted via Pull Request
-- PRs MUST pass all automated checks (build, lint, typecheck)
+- PRs MUST pass **build**, **lint**, and **typecheck** (Automated testing is optional)
 - Database schema changes MUST include a corresponding migration file
 
 ---
@@ -327,4 +318,4 @@ This Constitution supersedes all other project documentation and practices. Any 
 - Changes to Core Principles require unanimous agreement from maintainers
 - Versioning follows Semantic Versioning (MAJOR.MINOR.PATCH)
 
-**Version**: 2.1.0 | **Ratified**: 2025-12-24 | **Last Amended**: 2025-12-26
+**Version**: 2.3.0 | **Ratified**: 2025-12-24 | **Last Amended**: 2026-01-06
