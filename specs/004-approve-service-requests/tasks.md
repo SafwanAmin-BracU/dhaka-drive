@@ -90,7 +90,7 @@ This task list breaks down the "Admin Approval of Service Requests" feature into
 
 ### Server Layer - Queries
 
-- [ ] T009 [P] [US1] Create `getPendingRequests()` query in `src/lib/server/services/queries.ts`
+- [X] T009 [P] [US1] Create `getPendingRequests()` query in `src/lib/server/services/queries.ts`
   - Query `service_requests` table with status = 'Pending'
   - Join with `user` table for requester name/email
   - Join with `service_providers` table for provider info
@@ -98,13 +98,13 @@ This task list breaks down the "Admin Approval of Service Requests" feature into
   - Support pagination: limit, offset
   - Return: Array of ServiceRequestListItem
 
-- [ ] T010 [P] [US1] Create `getTotalPendingCount()` query in `src/lib/server/services/queries.ts`
+- [X] T010 [P] [US1] Create `getTotalPendingCount()` query in `src/lib/server/services/queries.ts`
   - Simple count of requests with status = 'Pending'
   - Used for pagination UI
 
 ### Component Layer
 
-- [ ] T011 [P] [US1] Create `ServiceRequestList.svelte` component in `src/lib/components/`
+- [X] T011 [P] [US1] Create `ServiceRequestList.svelte` component in `src/lib/components/`
   - Display pending requests in DaisyUI table with columns: Requester, Service Type, Requested Time, Provider, Submitted
   - Sortable headers (clicking header toggles sort order)
   - Show "No pending requests" message if empty (using DaisyUI `alert`)
@@ -114,12 +114,12 @@ This task list breaks down the "Admin Approval of Service Requests" feature into
 
 ### Route Layer
 
-- [ ] T012 [US1] Create `src/routes/app/admin/requests/+page.server.ts`
+- [X] T012 [US1] Create `src/routes/app/admin/requests/+page.server.ts`
   - Load action: Call `requireAdmin(event)` to verify permissions (FR-016)
   - Load action: Call `getPendingRequests()` with default sort (submittedAt, desc)
   - Return: `{ requests, total }`
 
-- [ ] T013 [US1] Create `src/routes/app/admin/requests/+page.svelte`
+- [X] T013 [US1] Create `src/routes/app/admin/requests/+page.svelte`
   - Import and render `ServiceRequestList` component
   - Pass loaded requests data
   - Handle loading/error states with DaisyUI alerts
