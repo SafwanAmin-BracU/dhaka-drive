@@ -1,6 +1,7 @@
 <!-- svelte-ignore a11y_label_has_associated_control -->
 <script lang="ts">
 	import { enhance } from "$app/forms";
+	import SaveProviderButton from '$lib/components/SaveProviderButton.svelte';
 
 	let { data, form } = $props();
 	let loading = $state(false);
@@ -75,6 +76,10 @@
 						/>
 					{/each}
 				</div>
+			</div>
+
+			<div class="mt-6 w-full px-4">
+				<SaveProviderButton providerId={data.provider.id} />
 			</div>
 		</figure>
 
