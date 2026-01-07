@@ -56,13 +56,13 @@
 							{item.content}
 						</p>
 
-						<div
+						<!-- <div
 							class="card-actions justify-end mt-4 pt-4 border-t border-base-100"
 						>
 							<button class="btn btn-ghost btn-xs text-primary"
 								>Share Update</button
 							>
-						</div>
+						</div> -->
 					</div>
 				</article>
 			{/each}
