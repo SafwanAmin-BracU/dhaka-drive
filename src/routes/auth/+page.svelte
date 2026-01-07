@@ -35,68 +35,9 @@
 							<span>{errorMessage}</span>
 						</div>
 					{/if}
-
-					<form class="space-y-4" aria-label="Sign in form">
-						<div class="form-control">
-							<label class="label" for="email">
-								<span class="label-text">Email</span>
-							</label>
-							<input
-								type="email"
-								id="email"
-								name="email"
-								placeholder="you@example.com"
-								class="input-bordered input w-full"
-								required
-								autocomplete="email"
-								aria-required="true"
-							/>
-						</div>
-
-						<div class="form-control">
-							<label class="label" for="password">
-								<span class="label-text">Password</span>
-							</label>
-							<input
-								type="password"
-								id="password"
-								name="password"
-								placeholder="••••••••"
-								class="input-bordered input w-full"
-								required
-								autocomplete="current-password"
-								aria-required="true"
-							/>
-						</div>
-
-						<div class="form-control mt-6">
-							<button
-								type="submit"
-								class="btn w-full btn-primary"
-								disabled={isLoading}
-								aria-busy={isLoading}
-							>
-								{#if isLoading}
-									<span class="loading loading-sm loading-spinner" aria-hidden="true"></span>
-									Signing in...
-								{:else}
-									Sign In
-								{/if}
-							</button>
-						</div>
-					</form>
-
-					<div class="divider">OR</div>
-
-					<p class="text-center text-sm text-base-content/70">
-						Don't have an account?
-						<a href="/auth" class="link link-primary">Sign up</a>
-					</p>
-
-					<p class="mt-4 text-center text-xs text-base-content/50">
-						<!-- TODO: Implement actual auth with Better Auth -->
-						Authentication coming soon. This is a placeholder form.
-					</p>
+					<button type="button" class="btn mx-auto flex btn-wide" onclick={handleGoogleSignIn}>
+						Sign in with Google
+					</button>
 				</div>
 			</div>
 		</div>
@@ -105,6 +46,7 @@
 
 <script lang="ts">
 import '$lib/app.css';
+import { authClient } from '$lib/auth-client';
 import Navbar from '$lib/components/Navbar.svelte';
 import type { PageProps } from './$types';
 
@@ -112,4 +54,9 @@ let { data }: PageProps = $props();
 
 let isLoading = $state(false);
 let errorMessage = $state('');
+
+const handleGoogleSignIn = async () => {
+	console.log('Initiating Google Sign-In');
+	await authClient.signIn.social({ provider: 'google' });
+};
 </script>
