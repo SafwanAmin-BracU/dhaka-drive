@@ -1,51 +1,36 @@
-<script lang="ts">
-	import type { LngLat } from "maplibre-gl";
-	import { DefaultMarker, MapLibre, Popup } from "svelte-maplibre";
-	import type { PageProps } from "./$types";
+<div class="space-y-6">
+	<!-- Welcome Section -->
+	<div class="flex items-center justify-between">
+		<div>
+			<h1 class="text-2xl font-bold">Welcome to DhakaDrive</h1>
+			<p class="text-base-content/70">Your urban mobility companion for Dhaka</p>
+		</div>
+		{#if !data.isAuthenticated}
+			<a href="/auth" class="btn btn-primary">Sign In</a>
+		{/if}
+	</div>
 
-	let { data }: PageProps = $props();
-	let spot: LngLat | undefined = $state();
-</script>
+	<!-- Quick Actions -->
+	<section>
+		<h2 class="mb-3 text-lg font-semibold">Quick Actions</h2>
+		<QuickActions />
+	</section>
 
-<!-- <LeafletMap markers={[]} /> -->
+	<!-- Main Content Grid -->
+	<div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+		<!-- Traffic Summary -->
+		<TrafficSummary incidents={data.incidents} />
 
-<!-- <pre>
-{JSON.stringify(data, null, 2)}
-</pre> -->
-<div class="h-[90vh] w-full">
-	<MapLibre
-		zoom={12}
-		class="map"
-		standardControls
-		style="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
-		antialias
-		center={[90.4152, 23.8041]}
-	>
-		<!-- <MapEvents
-	onclick={(event: MapMouseEvent) => {
-		const { lngLat } = event;
-		console.log("Map clicked at: ", lngLat);
-		spot = lngLat;
-		}}
-		/>
-	<DefaultMarker lngLat={spot}>
-		<Popup offset={[0, -10]}>
-			<div class="text-lg font-bold">Selected Spot</div>
-			</Popup>
-			</DefaultMarker> -->
-		{#each data.parkingSpots as { location: { x, y }, name }}
-			<DefaultMarker lngLat={[x, y]}>
-				<Popup offset={[0, -10]}>
-					<div class="text-sm">{name}</div>
-				</Popup>
-			</DefaultMarker>
-		{/each}
-	</MapLibre>
+		<!-- Recent Activity -->
+		<RecentActivity bookings={data.recentBookings} serviceRequests={data.recentServiceRequests} />
+	</div>
 </div>
 
-<style>
-	:global(.map) {
-		height: 100%;
-		margin: 0;
-	}
-</style>
+<script lang="ts">
+import QuickActions from '$lib/components/dashboard/QuickActions.svelte';
+import TrafficSummary from '$lib/components/dashboard/TrafficSummary.svelte';
+import RecentActivity from '$lib/components/dashboard/RecentActivity.svelte';
+import type { PageProps } from './$types';
+
+let { data }: PageProps = $props();
+</script>

@@ -1,11 +1,14 @@
 import type { Actions, PageServerLoad } from './$types';
+import { requireUser } from '$lib/server/auth';
 
 export const load = (async () => {
     return {};
 }) satisfies PageServerLoad;
 
 export const actions = {
-    default: async ({ request, locals: { drizzle, schema: { trafficReports } } }) => {
+    default: async ({ request, locals }) => {
+        const userId = requireUser(locals);
+        const { drizzle, schema: { trafficReports } } = locals;
         const formData = await request.formData();
 
         // 1. Extract Data
@@ -37,7 +40,7 @@ export const actions = {
                 location: { x: parseFloat(lngStr), y: parseFloat(latStr) },
                 imageUrl,
                 isVerified: false, // Default to unverified
-                userId: 1, // Replace with logic to get current user ID
+                userId,
             });
         } catch (err) {
             console.error(err);

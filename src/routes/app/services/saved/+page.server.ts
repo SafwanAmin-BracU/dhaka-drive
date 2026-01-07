@@ -1,10 +1,11 @@
 import { fail } from '@sveltejs/kit';
 import { desc, eq } from 'drizzle-orm';
 import type { Action, PageServerLoad } from './$types';
+import { requireUser } from '$lib/server/auth';
 
-export const load = (async ({ locals: { drizzle, schema: { savedProviders, serviceProviders } } }) => {
-    // Mock User ID
-    const currentUserId = 1;
+export const load = (async ({ locals }) => {
+    const currentUserId = requireUser(locals);
+    const { drizzle, schema: { savedProviders, serviceProviders } } = locals;
 
     try {
         const savedList = await drizzle

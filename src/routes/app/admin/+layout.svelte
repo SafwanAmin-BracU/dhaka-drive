@@ -1,36 +1,12 @@
-<script lang="ts">
-	import { page } from "$app/stores";
-	let { children } = $props();
-
-	const tabs = [
-		{ name: "Dashboard", path: "/app/admin", exact: true },
-		{ name: "Parking", path: "/app/admin/parking" },
-		{ name: "Traffic", path: "/app/admin/traffic" },
-		{ name: "Analytics", path: "/app/admin/analytics" },
-		{ name: "Feedback", path: "/app/admin/feedback" },
-	];
-
-	const isActive = (t: (typeof tabs)[0]) =>
-		t.exact
-			? $page.url.pathname === t.path
-			: $page.url.pathname.startsWith(t.path);
-</script>
-
 <div class="w-full">
-	<div
-		class="bg-neutral text-neutral-content rounded-xl shadow-lg mb-6 p-2 overflow-x-auto"
-	>
-		<div
-			class="tabs tabs-boxed bg-transparent justify-start md:justify-center w-full min-w-max"
-		>
+	<div class="mb-6 overflow-x-auto rounded-xl bg-base-200 p-2 text-base-content shadow-lg">
+		<div class="tabs-boxed tabs w-full min-w-max justify-start bg-transparent md:justify-center">
 			{#each tabs as tab}
 				<a
 					href={tab.path}
-					class="tab tab-sm md:tab-md transition-all text-neutral-content {isActive(
-						tab,
-					)
-						? 'tab-active bg-white text-neutral shadow-sm'
-						: 'hover:bg-neutral-focus'}"
+					class="tab-sm md:tab-md tab transition-all {isActive(tab)
+						? 'tab-active bg-base-100 text-base-content shadow-sm'
+						: 'hover:bg-base-300'}"
 				>
 					{tab.name}
 				</a>
@@ -40,3 +16,19 @@
 
 	{@render children()}
 </div>
+
+<script lang="ts">
+import { page } from '$app/stores';
+let { children } = $props();
+
+const tabs = [
+	{ name: 'Dashboard', path: '/app/admin', exact: true },
+	{ name: 'Parking', path: '/app/admin/parking' },
+	{ name: 'Traffic', path: '/app/admin/traffic' },
+	{ name: 'Analytics', path: '/app/admin/analytics' },
+	{ name: 'Feedback', path: '/app/admin/feedback' }
+];
+
+const isActive = (t: (typeof tabs)[0]) =>
+	t.exact ? $page.url.pathname === t.path : $page.url.pathname.startsWith(t.path);
+</script>

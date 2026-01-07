@@ -1,6 +1,6 @@
-
 import { eq } from 'drizzle-orm';
 import { error, fail, redirect } from '@sveltejs/kit';
+import { requireUser } from '$lib/server/auth';
 
 export const load = async ({ params, locals: { drizzle, schema: { serviceProviders } } }) => {
     const providerId = parseInt(params.id);
@@ -17,7 +17,9 @@ export const load = async ({ params, locals: { drizzle, schema: { serviceProvide
 };
 
 export const actions = {
-    default: async ({ request, params, locals: { drizzle, schema: { serviceAppointments } } }) => {
+    default: async ({ request, params, locals }) => {
+        const userId = requireUser(locals);
+        const { drizzle, schema: { serviceAppointments } } = locals;
         const data = await request.formData();
         const providerId = parseInt(params.id);
 
@@ -42,7 +44,7 @@ export const actions = {
         try {
             // 3. Insert Appointment
             await drizzle.insert(serviceAppointments).values({
-                userId: 1, // Mock User ID (Replace with locals.user.id)
+                userId,
                 providerId: providerId,
                 appointmentTime: appointmentTime,
                 serviceType: serviceType,

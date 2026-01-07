@@ -1,4 +1,4 @@
-import type { Handle } from "@sveltejs/kit";
+import { redirect, type Handle } from "@sveltejs/kit";
 
 import { env } from "$env/dynamic/private";
 import { schema, useDb } from "$lib/drizzle";
@@ -17,10 +17,26 @@ const handlers: Handle[] = [
     return response;
   },
 
-  // Better Auth handler
-  async ({ event, resolve }) =>
-    svelteKitHandler({ event, resolve, auth, building })
+  async ({ event, resolve }) => svelteKitHandler({ event, resolve, auth, building }),
 
+  // Better Auth session handler - populate locals.user and locals.session
+  async ({ event, resolve }) => {
+    const session = await auth.api.getSession({
+      headers: event.request.headers,
+    });
+
+    if (session) {
+      event.locals.session = session.session;
+      event.locals.user = session.user;
+    } else {
+      event.locals.session = null;
+      event.locals.user = null;
+      throw redirect(303, "/auth");
+    }
+
+    const response = await resolve(event);
+    return response;
+  }
 ];
 
 export const handle = sequence(...handlers);

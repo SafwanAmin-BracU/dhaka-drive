@@ -1,6 +1,6 @@
-
 import { fail } from '@sveltejs/kit';
 import { sql } from 'drizzle-orm';
+import { requireUser } from '$lib/server/auth';
 
 export const load = async ({ locals: { drizzle, schema: { serviceProviders } } }) => {
     // Fetch providers with coordinates extracted for the map
@@ -21,7 +21,9 @@ export const load = async ({ locals: { drizzle, schema: { serviceProviders } } }
 };
 
 export const actions = {
-    default: async ({ request, locals: { drizzle, schema: { serviceRequests } } }) => {
+    default: async ({ request, locals }) => {
+        const userId = requireUser(locals);
+        const { drizzle, schema: { serviceRequests } } = locals;
         const formData = await request.formData();
 
         // Extract Data
@@ -38,7 +40,7 @@ export const actions = {
         try {
             // Create the Service Request
             await drizzle.insert(serviceRequests).values({
-                userId: 1, // Mock User ID
+                userId,
                 providerId: providerId,
                 issueDescription: issueDescription,
                 status: 'Pending',

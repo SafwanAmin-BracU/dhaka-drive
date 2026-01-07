@@ -1,8 +1,9 @@
 import { eq, desc } from 'drizzle-orm';
+import { requireUser } from '$lib/server/auth';
 
-export const load = async ({ locals: { drizzle, schema: { serviceRequests, serviceProviders } } }) => {
-    // Mock User ID
-    const currentUserId = 1;
+export const load = async ({ locals }) => {
+    const currentUserId = requireUser(locals);
+    const { drizzle, schema: { serviceRequests, serviceProviders } } = locals;
 
     try {
         const requestHistory = await drizzle
