@@ -1,5 +1,6 @@
 import { eq, and, gte, lte, sql } from 'drizzle-orm';
 import { error, fail, redirect } from '@sveltejs/kit';
+import { requireUser } from '$lib/server/auth';
 
 export const load = async ({ params, locals: { drizzle, schema: { parkingSpots } } }) => {
     const spotId = parseInt(params.id);
@@ -15,7 +16,9 @@ export const load = async ({ params, locals: { drizzle, schema: { parkingSpots }
 };
 
 export const actions = {
-    default: async ({ request, params, locals: { drizzle, schema: { bookings, parkingSpots } } }) => {
+    default: async ({ request, params, locals }) => {
+        const userId = requireUser(locals);
+        const { drizzle, schema: { bookings, parkingSpots } } = locals;
         const data = await request.formData();
         const spotId = parseInt(params.id);
 
@@ -62,7 +65,7 @@ export const actions = {
 
             // 4. Create Booking
             await drizzle.insert(bookings).values({
-                userId: 1, // Mock User ID
+                userId,
                 parkingSpotId: spotId,
                 startTime: start,
                 endTime: end,

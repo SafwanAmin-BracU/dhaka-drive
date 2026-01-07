@@ -1,9 +1,10 @@
 import { eq, desc, and } from 'drizzle-orm';
 import { fail } from '@sveltejs/kit';
+import { requireUser } from '$lib/server/auth';
 
-export const load = async ({ locals: { drizzle, schema: { serviceAppointments, serviceProviders } } }) => {
-    // Mock User ID (Replace with locals.user.id in real auth)
-    const currentUserId = 1;
+export const load = async ({ locals }) => {
+    const currentUserId = requireUser(locals);
+    const { drizzle, schema: { serviceAppointments, serviceProviders } } = locals;
 
     try {
         const appointments = await drizzle.select({
