@@ -31,7 +31,7 @@ const handlers: Handle[] = [
     } else {
       event.locals.session = null;
       event.locals.user = null;
-      throw redirect(303, "/auth");
+      if (event.url.pathname.startsWith("/app")) throw redirect(303, "/auth");
     }
 
     const response = await resolve(event);
