@@ -83,7 +83,7 @@
 				></textarea>
 			</div>
 
-			<div class="form-control">
+			<!-- <div class="form-control">
 				<label class="label" for="image">
 					<span class="label-text font-semibold">Upload Photo</span>
 				</label>
@@ -93,7 +93,7 @@
 					accept="image/*"
 					class="file-input-bordered file-input w-full"
 				/>
-			</div>
+			</div> -->
 
 			<div class="mt-6 card-actions justify-end">
 				<button class="btn w-full btn-primary" disabled={loading || !lat}>

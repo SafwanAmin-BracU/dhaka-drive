@@ -29,7 +29,7 @@
 	onMount(() => {
 		const interval = setInterval(() => {
 			invalidate("app:parking-available"); // Refetches 'load' function
-		}, 1100); // 9 seconds (9ms would freeze the browser)
+		}, 9000); // 9 seconds (9ms would freeze the browser)
 
 		return () => clearInterval(interval);
 	});

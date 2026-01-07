@@ -37,7 +37,7 @@
 		class="card lg:card-side bg-base-100 shadow-xl max-w-4xl w-full overflow-hidden"
 	>
 		<figure
-			class="lg:w-1/2 bg-neutral text-neutral-content relative flex flex-col items-center justify-center p-8"
+			class="lg:w-1/2 bg-base-200 relative flex flex-col items-center justify-center p-8"
 		>
 			<div class="text-6xl mb-4">🅿️</div>
 			<h2 class="card-title text-3xl font-bold">{data.spot.name}</h2>
