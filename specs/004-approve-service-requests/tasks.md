@@ -135,7 +135,7 @@ This task list breaks down the "Admin Approval of Service Requests" feature into
 
 ### Server Layer - Queries
 
-- [ ] T014 [P] [US2] Create `getRequestById()` query in `src/lib/server/services/queries.ts`
+- [X] T014 [P] [US2] Create `getRequestById()` query in `src/lib/server/services/queries.ts`
   - Query `service_requests` by id
   - Join with `user` table for requester details (name, email, phone if available)
   - Join with `service_providers` table for full provider info
@@ -144,7 +144,7 @@ This task list breaks down the "Admin Approval of Service Requests" feature into
 
 ### Component Layer
 
-- [ ] T015 [P] [US2] Create `ServiceRequestDetails.svelte` component in `src/lib/components/`
+- [X] T015 [P] [US2] Create `ServiceRequestDetails.svelte` component in `src/lib/components/`
   - Display in two columns (left: user info, right: provider info)
   - Show user: name, email, phone, location map
   - Show provider: name, type, contact, address, rating, availability warning (FR-007)
@@ -155,13 +155,13 @@ This task list breaks down the "Admin Approval of Service Requests" feature into
 
 ### Route Layer
 
-- [ ] T016 [US2] Create `src/routes/app/admin/requests/[id]/+page.server.ts`
+- [X] T016 [US2] Create `src/routes/app/admin/requests/[id]/+page.server.ts`
   - Load action: Call `requireAdmin()` to verify permissions
   - Load action: Call `getRequestById(params.id)`
   - Handle 404 if request not found
   - Return: `{ request }`
 
-- [ ] T017 [US2] Create `src/routes/app/admin/requests/[id]/+page.svelte`
+- [X] T017 [US2] Create `src/routes/app/admin/requests/[id]/+page.svelte`
   - Import and render `ServiceRequestDetails` component
   - Add "Back to List" link
   - Show placeholder for Approve/Reject buttons (implemented in US3)
@@ -177,14 +177,14 @@ This task list breaks down the "Admin Approval of Service Requests" feature into
 
 ### Server Layer - Mutations
 
-- [ ] T018 [P] [US3] Create `approveRequest()` mutation in `src/lib/server/services/mutations.ts`
+- [X] T018 [P] [US3] Create `approveRequest()` mutation in `src/lib/server/services/mutations.ts`
   - Update `service_requests`: set status = 'Accepted', approvedAt = now, approvedByAdminId = currentUserId
   - Use conditional update to prevent race conditions (WHERE status = 'Pending')
   - Log action to audit trail (if audit table exists)
   - Return: Updated request object or error
   - File: `src/lib/server/services/mutations.ts`
 
-- [ ] T019 [US3] Create approval notification trigger in `src/lib/server/services/mutations.ts`
+- [X] T019 [US3] Create approval notification trigger in `src/lib/server/services/mutations.ts`
   - After successful approval, call `sendApprovalNotification()` for user (FR-010)
   - After successful approval, call `sendProviderApprovalNotification()` for provider (FR-011)
   - Ensure notifications sent within 10s requirement (SC-004)
@@ -192,7 +192,7 @@ This task list breaks down the "Admin Approval of Service Requests" feature into
 
 ### Component Layer
 
-- [ ] T020 [US3] Create `ApprovalModal.svelte` component in `src/lib/components/`
+- [X] T020 [US3] Create `ApprovalModal.svelte` component in `src/lib/components/`
   - DaisyUI modal with title "Confirm Approval"
   - Show request summary (user name, service type, provider name)
   - "Cancel" button (closes modal)
@@ -202,7 +202,7 @@ This task list breaks down the "Admin Approval of Service Requests" feature into
 
 ### Route Layer - API
 
-- [ ] T021 [US3] Create `src/routes/app/admin/requests/[id]/+server.ts` POST handler
+- [X] T021 [US3] Create `src/routes/app/admin/requests/[id]/approve/+page.server.ts` form action
   - Validate auth: Call `requireAdmin()`
   - Parse request body
   - Validate input with `approveRequestSchema`
@@ -213,7 +213,7 @@ This task list breaks down the "Admin Approval of Service Requests" feature into
 
 ### Component Integration
 
-- [ ] T022 [US3] Update `ServiceRequestDetails.svelte` to include Approve/Reject buttons
+- [X] T022 [US3] Create `ApprovalModal.svelte` integration with detail page
   - Add "Approve" button (btn-primary) that opens `ApprovalModal`
   - Button disabled if request status not "Pending"
   - After approval, show success toast and disable button
@@ -230,21 +230,21 @@ This task list breaks down the "Admin Approval of Service Requests" feature into
 
 ### Server Layer - Mutations
 
-- [ ] T023 [P] [US4] Create `rejectRequest()` mutation in `src/lib/server/services/mutations.ts`
+- [X] T023 [P] [US4] Create `rejectRequest()` mutation in `src/lib/server/services/mutations.ts`
   - Update `service_requests`: set status = 'Rejected', rejectedAt = now, rejectionReason = provided reason, approvedByAdminId = currentUserId
   - Use conditional update (WHERE status = 'Pending') to prevent race conditions
   - Log action to audit trail
   - Return: Updated request object or error
   - File: `src/lib/server/services/mutations.ts`
 
-- [ ] T024 [US4] Create rejection notification trigger in `src/lib/server/services/mutations.ts`
+- [X] T024 [US4] Create rejection notification trigger in `src/lib/server/services/mutations.ts`
   - After successful rejection, call `sendRejectionNotification()` for user (FR-014)
   - Include rejection reason in notification
   - Ensure notifications sent within 10s requirement
 
 ### Component Layer
 
-- [ ] T025 [US4] Create `RejectionReasonModal.svelte` component in `src/lib/components/`
+- [X] T025 [US4] Create `RejectionModal.svelte` component in `src/lib/components/`
   - DaisyUI modal with title "Reject Request"
   - Dropdown select for predefined reasons: "Provider not available", "Incomplete information", "User unresponsive", "Other"
   - Optional text field for custom explanation
@@ -255,7 +255,7 @@ This task list breaks down the "Admin Approval of Service Requests" feature into
 
 ### Route Layer - API
 
-- [ ] T026 [US4] Extend `src/routes/app/admin/requests/[id]/+server.ts` POST handler
+- [X] T026 [US4] Create form action `src/routes/app/admin/requests/[id]/reject/+page.server.ts`
   - Add support for action='reject'
   - Parse and validate rejection input with `rejectRequestSchema`
   - Call `rejectRequest()` mutation
