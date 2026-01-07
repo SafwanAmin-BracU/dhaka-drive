@@ -110,6 +110,7 @@ export const requestStatusEnum = pgEnum("request_status", [
   "Accepted",
   "Completed",
   "Cancelled",
+  "Rejected",
 ]);
 
 // ----------------------------------------------------------------------
@@ -198,6 +199,16 @@ export const serviceRequests = pgTable("service_requests", {
   status: requestStatusEnum("status").default("Pending"),
   userLocation: geometry("user_location", { type: "point", mode: "xy", srid: 4326 }).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
+  
+  // NEW: Approval fields
+  approvedAt: timestamp("approved_at"),
+  rejectedAt: timestamp("rejected_at"),
+  rejectionReason: text("rejection_reason"),
+  approvedByAdminId: text("approved_by_admin_id").references(() => user.id, { onDelete: "set null" }),
+  
+  // NEW: Request details
+  requestedDateTime: timestamp("requested_date_time"),
+  notes: text("notes"),
 });
 
 export const savedProviders = pgTable("saved_providers", {

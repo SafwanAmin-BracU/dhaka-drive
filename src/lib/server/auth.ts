@@ -25,3 +25,26 @@ export function requireUser(locals: App.Locals): string {
 export function getUser(locals: App.Locals) {
     return locals.user ?? null;
 }
+
+/**
+ * Requires an authenticated admin user and returns their ID.
+ * Throws a redirect to /auth if not authenticated or not an admin.
+ * Admin is identified by role === 'admin' in the user object.
+ *
+ * @param locals - The App.Locals object from the request event
+ * @returns The authenticated admin user's ID
+ * @throws Redirect to /auth if not authenticated
+ * @throws Redirect to /app if authenticated but not admin (403 would be better but SvelteKit recommends redirect)
+ */
+export function requireAdmin(locals: App.Locals): string {
+    if (!locals.user?.id) {
+        throw redirect(303, "/auth");
+    }
+
+    // Check for admin role
+    if (locals.user.role !== 'admin') {
+        throw redirect(303, "/app");
+    }
+
+    return locals.user.id;
+}

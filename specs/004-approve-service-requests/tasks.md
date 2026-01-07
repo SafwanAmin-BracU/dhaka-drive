@@ -30,15 +30,15 @@ This task list breaks down the "Admin Approval of Service Requests" feature into
 
 ### Database Schema & Migrations
 
-- [ ] T001 Create migration file to add approval fields to `service_requests` table
+- [X] T001 Create migration file to add approval fields to `service_requests` table
   - Add columns: `approvedAt`, `rejectedAt`, `rejectionReason`, `approvedByAdminId` 
   - Add columns: `requestedDateTime`, `notes`
   - File: `drizzle/[new_migration].sql`
 
-- [ ] T002 Update `requestStatusEnum` in `src/lib/drizzle/schema.ts` to include "Rejected" status
+- [X] T002 Update `requestStatusEnum` in `src/lib/drizzle/schema.ts` to include "Rejected" status
   - Modify: Add `"Rejected"` to enum values (currently: Pending, Accepted, Completed, Cancelled)
 
-- [ ] T003 [P] Update `serviceRequests` table definition in `src/lib/drizzle/schema.ts`
+- [X] T003 [P] Update `serviceRequests` table definition in `src/lib/drizzle/schema.ts`
   - Add new columns with proper types and defaults
   - Add foreign key: `approvedByAdminId → user.id`
 
@@ -48,34 +48,34 @@ This task list breaks down the "Admin Approval of Service Requests" feature into
 
 ### Types, Validation, Constants
 
-- [ ] T004 [P] Create Zod validation schemas in `src/lib/types/service-request-approval.ts`
+- [X] T004 [P] Create Zod validation schemas in `src/lib/types/service-request-approval.ts`
   - `approveRequestSchema`: { requestId, adminId }
   - `rejectRequestSchema`: { requestId, rejectionReason, customReason, adminId }
   - `getPendingRequestsSchema`: { sortBy, sortOrder, limit, offset }
   - Export all schemas for use in server code
 
-- [ ] T005 [P] Create TypeScript types in `src/lib/types/service-request-approval.ts`
+- [X] T005 [P] Create TypeScript types in `src/lib/types/service-request-approval.ts`
   - `ServiceRequestListItem` interface (for list display)
   - `ServiceRequestDetail` interface (for detail page)
   - `ApprovalResponse` interface (for API responses)
   - `RejectionResponse` interface (for rejection responses)
   - Export rejection reason constants: `REJECTION_REASONS = ['ProviderUnavailable', 'IncompleteInfo', 'UserUnresponsive', 'Other']`
 
-- [ ] T006 [P] Create constants file `src/lib/constants/admin.ts`
+- [X] T006 [P] Create constants file `src/lib/constants/admin.ts`
   - Export request statuses mapping
   - Export rejection reason labels (human-readable versions)
   - Export service type icons/colors
 
 ### Authentication & Authorization
 
-- [ ] T007 Add `requireAdmin()` helper to `src/lib/server/auth.ts`
+- [X] T007 Add `requireAdmin()` helper to `src/lib/server/auth.ts`
   - Function: Checks `event.locals.user?.role === 'admin'`
   - Throws redirect(303, '/login') if not admin
   - Returns user object if admin
 
 ### Notification System Setup
 
-- [ ] T008 Create notification helper in `src/lib/server/notifications.ts` (or extend existing)
+- [X] T008 Create notification helper in `src/lib/server/notifications.ts` (or extend existing)
   - `sendApprovalNotification(userId, requestDetails)` - in-app + email
   - `sendRejectionNotification(userId, rejectionReason)` - in-app + email
   - `sendProviderApprovalNotification(providerId, requestDetails)` - in-app + email
