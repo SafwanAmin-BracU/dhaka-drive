@@ -13,6 +13,7 @@ const handlers: Handle[] = [
     const response = await resolve(event);
     return response;
   },
+  // Authentication handler
 ];
 
 export const handle = sequence(...handlers);
