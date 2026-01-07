@@ -9,7 +9,7 @@ export const auth = betterAuth({
     emailAndPassword: { enabled: false },
     socialProviders: {
         google: {
-            prompt: 'select_account',
+            prompt: "select_account",
             clientId: env.GOOGLE_CLIENT_ID as string,
             clientSecret: env.GOOGLE_CLIENT_SECRET as string,
         }
