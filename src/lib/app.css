@@ -1,8 +1,9 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
-@plugin "daisyui";
-
+@plugin "daisyui" {
+  themes: light --default, dark;
+}
 html, body{
     @apply h-screen w-screen m-0 p-0;
 }
