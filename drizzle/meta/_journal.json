@@ -5,29 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1766455726247,
-      "tag": "0000_regular_reptil",
+      "when": 1767747349163,
+      "tag": "0000_gigantic_lionheart",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1766455769153,
-      "tag": "0001_burly_jack_murdock",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1766522695235,
-      "tag": "0002_thankful_wallow",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1766528495216,
-      "tag": "0003_sour_butterfly",
+      "when": 1767747358240,
+      "tag": "0001_sturdy_marvex",
       "breakpoints": true
     }
   ]
